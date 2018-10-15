@@ -1,13 +1,20 @@
 <template>
   <div class="home-page">
-    121313
+    <Header></Header>
   </div>
 </template>
 
 <script>
+import Header from '@/components/Header'
+
 export default {
+  components: {
+    Header
+  },
   data () {
-    return {}
+    return {
+      showNav: true
+    }
   },
   methods: {
     //
