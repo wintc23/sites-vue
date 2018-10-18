@@ -15,7 +15,7 @@
             <Input type="password" v-model="loginInfo.password" placeholder="请输入密码" />
           </FormItem>
           <FormItem>
-            <Button type="primary">登录</Button>
+            <Button type="primary" @click.stop="login('loginInfo')">登录</Button>
             <div class="register-link">
               还没有帐号？
               <router-link :to="{name: 'Register'}">
@@ -47,6 +47,17 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' }
         ]
       }
+    }
+  },
+  methods: {
+    login (name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          //
+        } else {
+          this.$Message.error('请检查账号密码输入')
+        }
+      })
     }
   }
 }
