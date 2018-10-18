@@ -11,8 +11,13 @@
     <div class="header-right">
       <div v-if="userInfo" class="userinfo"></div>
       <div v-else class="login-nav">
-        <div class="login">登录</div> |
-        <div class="register">注册</div>
+        <router-link class="login" :to="{ name: 'Login' }">
+          登录
+        </router-link>
+        <span class="devide">|</span>
+        <router-link class="register" :to="{name: 'Register'}">
+          注册
+        </router-link>
       </div>
     </div>
   </div>
@@ -36,30 +41,30 @@ export default {
 <style lang="stylus" scoped>
 .page-header
   display flex
-  height 4rem
-  padding 0 .5rem
+  height 3rem
+  padding 0 1rem
   align-items center
-  background #8CB2FB
-  font-size 2rem
+  background #0593d3
+  font-size 1rem
+  color white
   .header-left
     .collapse
       display flex
       align-items center
       cursor pointer
+      font-size 2rem
   .header-fill
     flex auto
   .header-right
     .login-nav
       display flex
       align-items center
-      color white
       .login, .register
+        color white
         cursor pointer
         &:hover
           color blue
           text-decoration underline
-      .login
-        margin-right .5rem
-      .register
-        margin-left .5rem
+      .devide
+        margin 0 .5rem
 </style>

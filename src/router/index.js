@@ -11,18 +11,24 @@ export default new Router({
     },
     {
       path: '/home',
-      name: 'Home',
-      component: () => import('@/pages/Home')
+      component: () => import('@/pages/Home'),
+      children: [
+        {
+          path: '',
+          name: 'Index',
+          component: () => import('@/pages/Index')
+        },
+        {
+          path: '/login',
+          name: 'Login',
+          component: () => import('@/pages/Login')
+        },
+        {
+          path: '/register',
+          name: 'Register',
+          component: () => import('@/pages/Register')
+        }
+      ]
     },
-    {
-      path: '/login',
-      name: 'Login',
-      component: () => import('@/pages/Login')
-    },
-    {
-      path: '/register',
-      name: 'Register',
-      component: () => import('@/pages/Register')
-    }
   ]
 })

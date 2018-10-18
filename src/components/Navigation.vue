@@ -1,6 +1,5 @@
 <template>
   <div class="navigation">
-    //
   </div>
 </template>
 
@@ -13,3 +12,10 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+.navigation
+  border 1px solid red 
+  width 10rem
+  height 100%
+</style>
