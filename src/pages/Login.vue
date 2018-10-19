@@ -30,13 +30,14 @@
 </template>
 
 <script>
+import userApi from '@/api/user'
+
 export default {
   data () {
     return {
       loginInfo: {
-        email: '',
-        password: '',
-        error: false
+        email: '1@qq.com',
+        password: '123'
       },
       ruleValidate: {
         email: [
@@ -53,7 +54,7 @@ export default {
     login (name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          //
+          userApi.login(this.loginInfo)
         } else {
           this.$Message.error('请检查账号密码输入')
         }
@@ -76,6 +77,7 @@ export default {
     font-size 1rem
     background #ECECEC
     border-radius 4px 
+    box-shadow 0 0 5px 2px #A9A9A9
     .login-welcome
       font-size 1.5rem
     .login-form

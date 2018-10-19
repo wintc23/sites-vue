@@ -5,21 +5,23 @@ const instance = axios.create({
   timeout: 2500
 })
 
-function beforeRequest (config) {
-  return config
-}
+// function beforeRequest (config) {
+//   return config
+// }
 
-function requestError (error) {
-  console.log(error)
-}
+// function requestError (error) {
+//   console.log(error)
+// }
 
-function resPreHandle (response) {
-  //
-}
+// function resPreHandle (response) {
+//   return response
+// }
 
-function responseError (error) {
-  console.log(error)
-}
+// function responseError (error) {
+//   console.log(error)
+// }
 
-instance.interceptors.request.use(beforeRequest, requestError)
-instance.interceptors.request.use(resPreHandle, responseError)
+// instance.interceptors.request.use(beforeRequest, requestError)
+// instance.interceptors.request.use(resPreHandle, responseError)
+
+export default instance

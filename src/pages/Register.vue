@@ -89,6 +89,7 @@ export default {
     background #ECECEC
     border-radius 4px
     padding 1rem 2rem
+    box-shadow 0 0 5px 2px #A9A9A9
     .register-welcome
       font-size 1.5rem
     .register-form

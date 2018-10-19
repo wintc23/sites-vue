@@ -3,7 +3,7 @@
     <div class="header">
       <Header @show-nav="switchShowNav"></Header>
     </div>
-    <div class="content">
+    <div class="content" ref="content">
       <div class="navigation" v-show="showNav">
         <Navigation></Navigation>
       </div>
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import CanvasNest from 'canvas-nest.js'
 import Header from '@/components/Header'
 import Navigation from '@/components/Navigation'
 
@@ -25,7 +26,24 @@ export default {
   },
   data () {
     return {
-      showNav: true
+      showNav: true,
+      canvasNest: null
+    }
+  },
+  mounted () {
+    if (!this.canvasNest) {
+      this.canvasNest = new CanvasNest(this.$refs.content, {
+        color: '72,120,246',
+        count: 88,
+        opacity: 1,
+        zIndex: 0
+      })
+    }
+  },
+  beforeDestroy() {
+    if (this.canvasNest) {
+      this.canvasNest.destory()
+      this.canvasNest = null
     }
   },
   methods: {
@@ -36,16 +54,19 @@ export default {
 }
 </script>
 
-
 <style lang="stylus" scoped>
 .home-page
   display flex
   flex-direction column
   height 100%
+  background #FAFBFC
   .content
     flex auto
     display flex
     .router-view
       flex auto
       overflow auto
+    .navigation, .router-view
+      position relative
+      z-index 1
 </style>
