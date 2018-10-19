@@ -1,12 +1,12 @@
 <template>
   <div class="home-page">
     <div class="header">
-      <Header @show-nav="switchShowNav"></Header>
+      <!-- <Header @show-nav="switchShowNav"></Header> -->
     </div>
     <div class="content" ref="content">
-      <div class="navigation" v-show="showNav">
+      <!-- <div class="navigation" v-show="showNav">
         <Navigation></Navigation>
-      </div>
+      </div> -->
       <div class="router-view">
         <router-view></router-view>
       </div>
