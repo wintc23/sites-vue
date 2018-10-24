@@ -1,7 +1,6 @@
 <template>
   <div class="editor-page">
-    <mavon-editor class="editor" v-model="content"/>
-    1234
+    <!-- <mavon-editor class="editor" v-model="content"/> -->
   </div>
 </template>
 

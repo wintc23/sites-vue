@@ -9,30 +9,118 @@
     </div>
     <div class="header-fill"></div>
     <div class="header-right">
-      <div v-if="userInfo" class="userinfo"></div>
+      <div v-if="userInfo" class="user-info" @mouseleave="hideMenu">
+        <div class="avatar" @mouseenter="showMenu">
+          <img :src="userInfo.avatar" class="avatar-img" alt="头像" />
+        </div>
+        <div class="menu" v-show="showUserMenu">
+          <div class="user-name menu-item">
+            {{userInfo.username}}
+          </div>
+          <div class="log-out menu-item" @click.stop="loginOut">
+            退出
+          </div>
+        </div>
+      </div>
       <div v-else class="login-nav">
-        <router-link class="login" :to="{ name: 'Login' }">
-          登录
-        </router-link>
+        <div class="login" @click="rightDrawer=1">登录</div>
         <span class="devide">|</span>
-        <router-link class="register" :to="{name: 'Register'}">
-          注册
-        </router-link>
+        <div class="login" @click="rightDrawer=2">注册</div>
       </div>
     </div>
+    <Drawer
+      :title="rightDrawer===1 ? '登录': '创建账户'"
+      :closeable="true"
+      :value="rightDrawer!==0"
+      @on-close="rightDrawer=0"
+      class-name="header-drawer-container">
+        <div class="draw-body">
+          <div class="fill"></div>
+          <div class="content">
+            <Login v-if="rightDrawer===1" @register-link="rightDrawer=2" @success="loginSuccess" ></Login>
+            <Register v-else @login-link="rightDrawer=1" @success="registerSuccess"></Register>
+          </div>
+          <div class="fill"></div>
+          <div class="fill"></div>
+        </div>
+    </Drawer>
   </div>
 </template>
 
 <script>
+import Login from './Login'
+import Register from './Register'
+import userApi from '@/api/user'
+import { getToken, clearToken } from '@/libs/tool'
+
 export default {
   data () {
     return {
-      userInfo: null
+      userInfo: null,
+      rightDrawer: 0, // 0-不显示 1-登录 2-注册
+      showUserMenu: false,
+      showMenuTimer: 0
     }
+  },
+  computed: {
+    showRightDrawer () {
+      return this.rightDrawer !== 0
+    }
+  },
+  components: {
+    Login,
+    Register
+  },
+  created () {
+    this.$bus.$on('clear-auth-token', this.clearUserInfo)
+    if (getToken()) {
+      this.getUserInfo()
+    }
+  },
+  beforeDestroy() {
+    if (this.showMenuTimer) {
+      clearTimeout(this.showMenuTimer)
+      this.showMenuTimer = 0
+    }
+    this.$bus.$off('clear-auth-token')
   },
   methods: {
     showNavigation () {
       this.$emit('show-nav')
+    },
+    loginSuccess () {
+      this.rightDrawer = 0
+      this.getUserInfo()
+    },
+    loginOut () {
+      clearToken()
+      this.clearUserInfo()
+    },
+    registerSuccess () {
+      this.rightDrawer = 2
+    },
+    async getUserInfo () {
+      userApi.getUserInfoByToken().then(res => {
+        if (res.status === 200) {
+          this.userInfo = res.data
+        }
+      })
+    },
+    clearUserInfo () {
+      this.userInfo = null
+    },
+    showMenu () {
+      if (this.showMenuTimer) {
+        clearTimeout(this.showMenuTimer)
+        this.showMenuTimer = 0
+      }
+      this.showUserMenu = true
+    },
+    hideMenu () {
+      setTimeout(() => {
+        this.showMenuTimer = 0
+        this.showUserMenu = false
+      })
     }
   }
 }
@@ -46,7 +134,6 @@ export default {
   align-items center
   background #0593d3
   font-size 1rem
-  color white
   .header-left
     .collapse
       display flex
@@ -56,6 +143,37 @@ export default {
   .header-fill
     flex auto
   .header-right
+    margin auto 0
+    display flex
+    .user-info
+      margin-right 2rem
+      position relative
+      .avatar
+        display flex
+        align-items center
+        cursor pointer
+        .avatar-img
+          width 2.5rem
+          height 2.5rem
+          border-radius 1.5rem
+      .menu
+        color #3F536E
+        position absolute
+        z-index 2
+        display flex
+        flex-direction column
+        width 6rem
+        box-shadow 0 0 5px 1px #9B9B9B
+        transform translate(-50%, 0)
+        left 50%
+        border-radius 4px
+        opacity 1
+        background white
+        .menu-item
+          cursor pointer
+          padding 2px
+          &:hover
+            background #D2D2D2
     .login-nav
       display flex
       align-items center
@@ -67,4 +185,19 @@ export default {
           text-decoration underline
       .devide
         margin 0 .5rem
+
 </style>
+
+<style lang="stylus">
+.header-drawer-container > div
+  width 25rem!important
+  max-width 100%
+  .draw-body
+    height 100%
+    display flex
+    flex-direction column
+    text-align center
+    .fill
+      flex auto
+</style>
+

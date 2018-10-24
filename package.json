@@ -38,7 +38,9 @@
         {
           "x-invalid-end-tag": false
         }
-      ]
+      ],
+      "no-unused-vars": "off",
+      "no-console": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"

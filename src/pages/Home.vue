@@ -1,7 +1,7 @@
 <template>
   <div class="home-page">
     <div class="header">
-      <!-- <Header @show-nav="switchShowNav"></Header> -->
+      <Header @show-nav="switchShowNav"></Header>
     </div>
     <div class="content" ref="content">
       <!-- <div class="navigation" v-show="showNav">
@@ -31,13 +31,13 @@ export default {
     }
   },
   mounted () {
-    if (!this.canvasNest) {
-      this.canvasNest = new CanvasNest(this.$refs.content, {
-        color: '72,120,246',
-        count: 88,
-        opacity: 1,
-        zIndex: 0
-      })
+    if (!this.canvasNest && this.$isPC) {
+      // this.canvasNest = new CanvasNest(this.$refs.content, {
+      //   color: '72,120,246',
+      //   count: 88,
+      //   opacity: 1,
+      //   zIndex: 0
+      // })
     }
   },
   beforeDestroy() {
