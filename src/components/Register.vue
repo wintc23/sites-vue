@@ -90,7 +90,14 @@ export default {
     register (name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          userApi.register(this.registerInfo)
+          userApi.register(this.registerInfo).then(res => {
+            if (res.status === 200 && res.data.success) {
+              this.$Message.success('注册成功！')
+              this.$emit('success')
+            }
+          }).catch(error => {
+            this.$Message.error(error.response.data.message || '注册失败')
+          })
         } else {
           this.$Message.error('请检查账号密码输入')
         }

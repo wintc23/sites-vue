@@ -9,8 +9,8 @@
     </div>
     <div class="header-fill"></div>
     <div class="header-right">
-      <div v-if="userInfo" class="user-info" @mouseleave="hideMenu">
-        <div class="avatar" @mouseenter="showMenu">
+      <div v-if="userInfo" class="user-info" v-click-outside="hideMenu">
+        <div class="avatar" @click="showMenu">
           <img :src="userInfo.avatar" class="avatar-img" alt="头像" />
         </div>
         <div class="menu" v-show="showUserMenu">
@@ -58,8 +58,7 @@ export default {
     return {
       userInfo: null,
       rightDrawer: 0, // 0-不显示 1-登录 2-注册
-      showUserMenu: false,
-      showMenuTimer: 0
+      showUserMenu: false
     }
   },
   computed: {
@@ -78,10 +77,6 @@ export default {
     }
   },
   beforeDestroy() {
-    if (this.showMenuTimer) {
-      clearTimeout(this.showMenuTimer)
-      this.showMenuTimer = 0
-    }
     this.$bus.$off('clear-auth-token')
   },
   methods: {
@@ -110,17 +105,10 @@ export default {
       this.userInfo = null
     },
     showMenu () {
-      if (this.showMenuTimer) {
-        clearTimeout(this.showMenuTimer)
-        this.showMenuTimer = 0
-      }
       this.showUserMenu = true
     },
     hideMenu () {
-      setTimeout(() => {
-        this.showMenuTimer = 0
-        this.showUserMenu = false
-      })
+      this.showUserMenu = false
     }
   }
 }

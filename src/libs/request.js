@@ -4,8 +4,8 @@ import iView from 'iview'
 
 const beforeRequest = (config) => {
   let token = getToken()
-  if (token && token.indexOf(':') === -1) {
-    config.headers = config.headers || {}
+  config.headers = config.headers || {}
+  if (token && !config.headers['Authorization']) {
     config.headers['Authorization'] = token
   }
   return config
@@ -16,14 +16,14 @@ function requestError (error) {
 }
 
 function resPreHandle (response) {
-  if (response.status === 401) { // 请求需要验证的接口未通过认证
-    iView.Message.error('非法请求，请登录22')
-    clearToken()
-  }
   return response
 }
 
 function responseError (error) {
+  if (error.response.status === 401) {
+    iView.Message.error('非法请求，请登录')
+    // clearToken()
+  }
   return Promise.reject(error)
 }
 
