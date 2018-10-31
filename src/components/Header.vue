@@ -99,6 +99,8 @@ export default {
         if (res.status === 200) {
           this.userInfo = res.data
         }
+      }).catch(error => {
+        this.$Message.warning('登录信息过期，请重新登录')
       })
     },
     clearUserInfo () {

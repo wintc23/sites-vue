@@ -22,7 +22,7 @@ function resPreHandle (response) {
 function responseError (error) {
   if (error.response.status === 401) {
     iView.Message.error('非法请求，请登录')
-    // clearToken()
+    clearToken()
   }
   return Promise.reject(error)
 }
