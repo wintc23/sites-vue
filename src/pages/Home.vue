@@ -7,9 +7,7 @@
       <!-- <div class="navigation" v-show="showNav">
         <Navigation></Navigation>
       </div> -->
-      <div class="router-view">
-        <router-view></router-view>
-      </div>
+      <router-view class="router-view"></router-view>
     </div>
   </div>
 </template>
@@ -32,12 +30,12 @@ export default {
   },
   mounted () {
     if (!this.canvasNest && this.$isPC) {
-      // this.canvasNest = new CanvasNest(this.$refs.content, {
-      //   color: '72,120,246',
-      //   count: 88,
-      //   opacity: 1,
-      //   zIndex: 0
-      // })
+      this.canvasNest = new CanvasNest(this.$refs.content, {
+        color: '72,120,246',
+        count: 88,
+        opacity: 1,
+        zIndex: 0
+      })
     }
   },
   beforeDestroy() {
@@ -62,10 +60,20 @@ export default {
   background #FAFBFC
   .content
     flex auto
+    overflow auto
+    background #ECF5FD
+    text-align center
+    position relative
     display flex
+    height 100%
     .router-view
       flex auto
-      overflow auto
+      margin auto
+      min-height 100%
+      max-width 55rem
+      overflow visible
+      background white
+      padding 2rem
     .navigation, .router-view
       position relative
       z-index 1

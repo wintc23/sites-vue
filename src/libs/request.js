@@ -21,14 +21,16 @@ function resPreHandle (response) {
 
 function responseError (error) {
   if (error.response.status === 401) {
-    iView.Message.error('非法请求，请登录')
+    if (error.response.data.notify) {
+      iView.Message.error(error.response.data.message)
+    }
     clearToken()
   }
   return Promise.reject(error)
 }
 
 const instance = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'http://localhost:5000',
   timeout: 15 * 1000,
 })
 

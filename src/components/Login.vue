@@ -8,11 +8,11 @@
         <Form ref="loginInfo" :model="loginInfo" :rules="ruleValidate">
           <FormItem prop="email">
             <span slot="label" class="label">邮箱</span>
-            <Input type="text" v-model="loginInfo.email" placeholder="请输入邮箱" autocomplete="on"/>
+            <Input type="text" v-model="loginInfo.email" @on-enter="login('loginInfo')" placeholder="请输入邮箱" autocomplete="on"/>
           </FormItem>
           <FormItem prop="password">
             <span slot="label" class="label">密码</span>
-            <Input type="password" v-model="loginInfo.password" placeholder="请输入密码" />
+            <Input type="password" v-model="loginInfo.password" @on-enter="login('loginInfo')" placeholder="请输入密码" />
           </FormItem>
           <FormItem :label-width="0">
             <div class="action">

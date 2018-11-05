@@ -1,6 +1,9 @@
 <template>
   <div class="page-header">
     <div class="header-left">
+      <div class="back-home" @click.stop="backHome">
+        <Icon type="ios-home" />
+      </div>
       <div
         class="collapse"
         @click.stop="showNavigation">
@@ -16,6 +19,12 @@
         <div class="menu" v-show="showUserMenu">
           <div class="user-name menu-item">
             {{userInfo.username}}
+          </div>
+          <div class="write-post menu-item" v-if="userInfo.manager" @click.stop="editPost">
+            写文章
+          </div>
+          <div class="write-post menu-item" v-if="userInfo.manager" @click.stop="manager">
+            后台管理
           </div>
           <div class="log-out menu-item" @click.stop="loginOut">
             退出
@@ -80,6 +89,9 @@ export default {
     this.$bus.$off('clear-auth-token')
   },
   methods: {
+    backHome () {
+      this.$router.push({ name: 'Index' })
+    },
     showNavigation () {
       this.$emit('show-nav')
     },
@@ -100,7 +112,8 @@ export default {
           this.userInfo = res.data
         }
       }).catch(error => {
-        this.$Message.warning('登录信息过期，请重新登录')
+        clearToken()
+        // this.$Message.warning('登录信息过期，请重新登录')
       })
     },
     clearUserInfo () {
@@ -111,6 +124,12 @@ export default {
     },
     hideMenu () {
       this.showUserMenu = false
+    },
+    editPost () {
+      this.$router.push({ name: 'PostEdit' })
+    },
+    manager () {
+      this.$router.push({ name: 'Manager' })
     }
   }
 }
@@ -125,11 +144,19 @@ export default {
   background #0593d3
   font-size 1rem
   .header-left
-    .collapse
+    display flex
+    align-items center
+    font-size 2rem
+    .collapse, .back-home
       display flex
       align-items center
       cursor pointer
-      font-size 2rem
+      color white
+      margin-right .5rem
+      &:active
+        position relative
+        top 1px
+        left 1px
   .header-fill
     flex auto
   .header-right
