@@ -1,4 +1,4 @@
-
+import store from '@/store'
 import Vue from 'vue'
 
 export function IsPC () {
@@ -24,5 +24,5 @@ export function setToken (token) {
 
 export function clearToken () {
   localStorage.removeItem('authToken')
-  Vue.prototype.$bus.$emit('clear-auth-token')
+  store.commit('userInfo/clearInfo')
 }

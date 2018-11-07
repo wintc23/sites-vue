@@ -61,11 +61,11 @@ import Login from './Login'
 import Register from './Register'
 import userApi from '@/api/user'
 import { getToken, clearToken } from '@/libs/tool'
+import { mapActions } from 'vuex'
 
 export default {
   data () {
     return {
-      userInfo: null,
       rightDrawer: 0, // 0-不显示 1-登录 2-注册
       showUserMenu: false
     }
@@ -73,6 +73,9 @@ export default {
   computed: {
     showRightDrawer () {
       return this.rightDrawer !== 0
+    },
+    userInfo () {
+      return this.$store.userInfo.obj
     }
   },
   components: {
@@ -80,15 +83,12 @@ export default {
     Register
   },
   created () {
-    this.$bus.$on('clear-auth-token', this.clearUserInfo)
-    if (getToken()) {
-      this.getUserInfo()
-    }
+    this.getUserInfo()
   },
   beforeDestroy() {
-    this.$bus.$off('clear-auth-token')
   },
   methods: {
+    ...mapActions(['getUserInfo']),
     backHome () {
       this.$router.push({ name: 'Index' })
     },
@@ -101,23 +101,10 @@ export default {
     },
     loginOut () {
       clearToken()
-      this.clearUserInfo()
+      this.$store.commit('userInfo/clearInfo')
     },
     registerSuccess () {
       this.rightDrawer = 2
-    },
-    async getUserInfo () {
-      userApi.getUserInfoByToken().then(res => {
-        if (res.status === 200) {
-          this.userInfo = res.data
-        }
-      }).catch(error => {
-        clearToken()
-        // this.$Message.warning('登录信息过期，请重新登录')
-      })
-    },
-    clearUserInfo () {
-      this.userInfo = null
     },
     showMenu () {
       this.showUserMenu = true

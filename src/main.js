@@ -7,6 +7,8 @@ import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import { IsPC } from '@/libs/tool.js'
 import '@/directives/index'
+import store from './store'
+
 
 Vue.use(iView)
 Vue.use(mavonEditor)
@@ -16,5 +18,6 @@ Vue.prototype.$isPC = IsPC()
 
 new Vue({
   render: h => h(App),
-  router
+  router,
+  store
 }).$mount('#app')
