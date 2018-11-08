@@ -33,9 +33,9 @@ export default new Router({
           component: () => import('@/pages/EditPost')
         },
         {
-          path: 'manager',
-          name: 'Manager',
-          component: () => import('@/pages/Manager')
+          path: 'manage',
+          name: 'Manage',
+          component: () => import('@/pages/Manage')
         }
       ]
     },

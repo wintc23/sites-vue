@@ -12,7 +12,7 @@
     </div>
     <div class="header-fill"></div>
     <div class="header-right">
-      <div v-if="userInfo" class="user-info" v-click-outside="hideMenu">
+      <div v-if="userInfo.username" class="user-info" v-click-outside="hideMenu">
         <div class="avatar" @click="showMenu">
           <img :src="userInfo.avatar" class="avatar-img" alt="头像" />
         </div>
@@ -23,7 +23,7 @@
           <div class="write-post menu-item" v-if="userInfo.manager" @click.stop="editPost">
             写文章
           </div>
-          <div class="write-post menu-item" v-if="userInfo.manager" @click.stop="manager">
+          <div class="write-post menu-item" v-if="userInfo.manager" @click.stop="manage">
             后台管理
           </div>
           <div class="log-out menu-item" @click.stop="loginOut">
@@ -75,7 +75,7 @@ export default {
       return this.rightDrawer !== 0
     },
     userInfo () {
-      return this.$store.userInfo.obj
+      return this.$store.state.userInfo
     }
   },
   components: {
@@ -88,7 +88,9 @@ export default {
   beforeDestroy() {
   },
   methods: {
-    ...mapActions(['getUserInfo']),
+    ...mapActions({
+      getUserInfo: 'userInfo/getUserInfo'
+    }),
     backHome () {
       this.$router.push({ name: 'Index' })
     },
@@ -115,8 +117,8 @@ export default {
     editPost () {
       this.$router.push({ name: 'PostEdit' })
     },
-    manager () {
-      this.$router.push({ name: 'Manager' })
+    manage () {
+      this.$router.push({ name: 'Manage' })
     }
   }
 }

@@ -27,7 +27,7 @@
           <Input class="item-right" v-model="type.alias" />
         </div>
         <Button type="primary" @click.stop="tryAddTag" class="menu-button">添加</Button>
-        <Button type="primary" @click.stop="updateTag" class="menu-button">保存</Button>
+        <Button type="primary" @click.stop="updatePostTag" class="menu-button">保存</Button>
       </div>
     </div>
   </div>
@@ -35,63 +35,47 @@
 
 <script>
 import postApi from '@/api/post'
+import { mapActions } from 'vuex'
+import _ from 'lodash'
 
 export default {
   data () {
     return {
       // 设置信息
-      typeList: [],
-      tagList: []
+      typeList: _.cloneDeep(this.$store.state.post.typeList),
+      tagList: _.cloneDeep(this.$store.state.tagList)
+    }
+  },
+  watch: {
+    '$store.state.post.typeList': function () {
+      this.typeList = _.cloneDeep(this.$store.state.post.typeList)
+    },
+    '$store.state.post.tagList': function () {
+      this.tagList = _.cloneDeep(this.$store.state.post.tagList)
     }
   },
   mounted () {
-    this.getPostType()
+    this.getTypeList()
     this.getTagList()
   },
   methods: {
+    ...mapActions({
+      getTypeList: 'post/getTypeList',
+      getTagList: 'post/getTagList',
+      updateType: 'post/updateType',
+      updateTag: 'post/updateTag'
+    }),
     tryAddType () {
       this.typeList.push({ name: '', alias: '' })
     },
     tryAddTag () {
       this.tagList.push({ name: '', alias: '' })
     },
-    getPostType () {
-      postApi.getPostType().then(res => {
-        if (res.status === 200) {
-          this.typeList = res.data.list
-        }
-      }).catch(error => {
-        console.log(error)
-      })
-    },
     updatePostType () {
-      postApi.updateType({ list: this.typeList }).then(res => {
-        if (res.status === 200) {
-          this.$Message.success('保存成功')
-          this.getPostType()
-        }
-      }).catch(error => {
-        this.$Message.error('保存失败')
-      })
+      this.updateType({ list: this.typeList, notify: true })
     },
-    getTagList () {
-      let res = postApi.getTagList().then(res => {
-        if (res.status === 200) {
-          this.tagList = res.data.list
-        }
-      }).catch(error => {
-        console.log(error)
-      })
-    },
-    updateTag () {
-      postApi.updateTag({ list: this.tagList }).then(res => {
-        if (res.status === 200) {
-          this.$Message.success('保存成功')
-          this.getTagList()
-        }
-      }).catch(error => {
-        this.$Message.error('保存失败')
-      })
+    updatePostTag () {
+      this.updateTag({ list: this.tagList, notify: true })
     }
   }
 }

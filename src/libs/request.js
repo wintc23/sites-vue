@@ -20,6 +20,7 @@ function resPreHandle (response) {
 }
 
 function responseError (error) {
+  console.log(error)
   if (error.response.status === 401) {
     if (error.response.data.notify) {
       iView.Message.error(error.response.data.message)

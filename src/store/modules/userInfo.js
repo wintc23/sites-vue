@@ -2,6 +2,7 @@ import userApi from '@/api/user'
 import { getToken, clearToken } from '@/libs/tool'
 
 export default {
+  namespaced: true,
   state: {
     username: '',
     avatar: '',
@@ -22,14 +23,14 @@ export default {
   },
   mutations: {
     setInfo (state, data) {
-      state.obj = { ...data }
+      for (let key in data) {
+        state[key] = data[key]
+      }
     },
     clearInfo (state) {
-      state.obj = {
-        username: '',
-        avatar: '',
-        manager: false
-      }
+      state.username = ''
+      state.avatar = ''
+      state.manager = false
     }
   }
 }
