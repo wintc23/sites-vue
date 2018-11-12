@@ -26,7 +26,13 @@ export default new Router({
           path: 'post',
           name: 'Post',
           component: () => import('@/pages/ShowPost')
-        },
+        }
+      ]
+    },
+    {
+      path: '/admin',
+      component: () => import('@/pages/Admin'),
+      children: [
         {
           path: 'postedit',
           name: 'PostEdit',
@@ -38,6 +44,6 @@ export default new Router({
           component: () => import('@/pages/Manage')
         }
       ]
-    },
+    }
   ]
 })

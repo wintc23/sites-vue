@@ -1,33 +1,35 @@
-  <template>
-  <div class="post-page">
-    <div v-for="(post, idx) of postList" :key="idx" class="post">
-      <div class="post-title" @click.stop="readPost(post.id)">{{post.title}}</div>
-      <div class="post-tags">
-        <div class="tag">Javascript</div>
-        <div class="tag">Vue.js</div>
-      </div>
-      <div class="post-abstract">{{post.abstract}}</div>
-      <div class="post-read-link" @click.stop="readPost(post.id)">阅读全文</div>
-      <div class="post-info">
-        <div class="info-read">
-          <Icon type="md-eye" class="icon" title="阅读次数"/>
-          <span class="title">阅读</span>
-          <span class="count">{{post.read_times}}</span>
+<template>
+  <div>
+    <div class="post-page main-content">
+      <div v-for="(post, idx) of postList" :key="idx" class="post">
+        <div class="post-title" @click.stop="readPost(post.id)">{{post.title}}</div>
+        <div class="post-tags">
+          <div class="tag">Javascript</div>
+          <div class="tag">Vue.js</div>
         </div>
-        <div class="info-like">
-          <Icon type="md-heart" class="icon" title="点赞次数"/>
-          <span class="title">喜欢</span>
-          <span class="count">{{post.likes}}</span>
-        </div>
-        <div class="info-comment">
-          <Icon type="md-text" class="icon" title="评论数量"/>
-          <span class="title">评论</span>
-          <span class="count">{{post.comment_times}}</span>
-        </div>
-        <div class="info-time">
-          <Icon type="ios-time-outline" class="icon" title="发布时间"/>
-          <span class="title">发布于</span>
-          <span class="format">{{post.timestamp}}</span>
+        <div class="post-abstract">{{post.abstract}}</div>
+        <div class="post-read-link" @click.stop="readPost(post.id)">阅读全文</div>
+        <div class="post-info">
+          <div class="info-read">
+            <Icon type="md-eye" class="icon" title="阅读次数"/>
+            <span class="title">阅读</span>
+            <span class="count">{{post.read_times}}</span>
+          </div>
+          <div class="info-like">
+            <Icon type="md-heart" class="icon" title="点赞次数"/>
+            <span class="title">喜欢</span>
+            <span class="count">{{post.likes}}</span>
+          </div>
+          <div class="info-comment">
+            <Icon type="md-text" class="icon" title="评论数量"/>
+            <span class="title">评论</span>
+            <span class="count">{{post.comment_times}}</span>
+          </div>
+          <div class="info-time">
+            <Icon type="ios-time-outline" class="icon" title="发布时间"/>
+            <span class="title">发布于</span>
+            <span class="format">{{post.timestamp}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -69,13 +71,14 @@ export default {
 .post-page
   display flex
   flex-direction column
+  height auto
   .post
     padding 1rem
-    // box-shadow 0 1px 5px 0 gray
     border-bottom 1px solid #B1B1B1
     display flex
     flex-direction column
     text-align left
+    flex-shrink 0
     .post-title
       font-size 1.5rem
       font-weight blod

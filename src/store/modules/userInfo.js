@@ -1,3 +1,4 @@
+// 当前用户信息
 import userApi from '@/api/user'
 import { getToken, clearToken } from '@/libs/tool'
 

@@ -130,8 +130,9 @@ export default {
   height 3rem
   padding 0 1rem
   align-items center
-  background #0593d3
+  background rgba(51, 97, 216, 0.9)
   font-size 1rem
+  border-bottom 2px solid white
   .header-left
     display flex
     align-items center

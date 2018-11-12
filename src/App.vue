@@ -5,9 +5,20 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 
 export default {
-  name: 'app'
+  name: 'app',
+  mounted () {
+    this.getTypeList()
+    this.getTagList()
+  },
+  methods: {
+    ...mapActions({
+      getTypeList: 'post/getTypeList',
+      getTagList: 'post/getTagList',
+    })
+  }
 }
 </script>
 
@@ -19,5 +30,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   height: 100%;
+}
+html, body {
+  overflow: hidden;
 }
 </style>

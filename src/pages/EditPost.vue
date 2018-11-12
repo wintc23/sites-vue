@@ -4,22 +4,35 @@
       <Input placeholder="输入文章标题" />
     </div>
     <div class="post-content">
-      <mavon-editor class="editor" v-model="content"/>
+      <mavon-editor class="editor" v-model="postInfo.content"/>
     </div>
     <div class="post-info">
     </div>
     <div class="post-menu">
-      <Button type="primary">文章设置</Button>
-      <Button type="primary">保存</Button>
+      <Button type="primary" class="button" @click="showSetting=true">文章设置</Button>
+      <Button type="primary" class="button">保存</Button>
     </div>
-    <Modal v-model="showSetting">
-      <div class="post-type">
-        <div class="title">文章分类</div>
-        <Select></Select>
-      </div>
-      <div class="post-tags">
-        <div class="title">文章标签</div>
-        <CheckboxGroup></CheckboxGroup>
+    <Modal v-model="showSetting" title="文章设置">
+      <div class="post-setting">
+        <div class="post-type">
+          <div class="title">文章分类</div>
+          <Select v-model="postInfo.type">
+            <Option
+              v-for="(item, idx) of types"
+              :value="item.id"
+              :label="item.name"
+              :key="idx">
+            </Option>
+          </Select>
+        </div>
+        <div class="post-tags">
+          <div class="title">文章标签</div>
+          <CheckboxGroup v-model="postInfo.tags">
+            <Checkbox v-for="(tag, idx) of tags" :label="tag.id" :key="idx">
+              {{ tag.name }}
+            </Checkbox>
+          </CheckboxGroup>
+        </div>
       </div>
     </Modal>
   </div>
@@ -30,8 +43,8 @@
 export default {
   data () {
     return {
-      loaded: '',
-      showSetting: false,
+      loaded: false,
+      showSetting: true,
       postInfo: {
         title: '',
         content: '',
@@ -48,6 +61,12 @@ export default {
       if (this.isNew) return true
       if (this.loaded) return true
       return false
+    },
+    tags () {
+      return this.$store.state.post.tagList
+    },
+    types () {
+      return this.$store.state.post.typeList
     }
   }
 }
@@ -70,7 +89,16 @@ export default {
     bottom 0
     left 0
     right 0
+    z-index 1
   .post-menu
     margin-top .5rem
-    text-align left
+    text-align right
+    .button
+      margin .5rem
+
+.post-setting
+  .post-type, .post-tags
+    margin-bottom 1rem
+    .title
+      margin-bottom .5rem
 </style>

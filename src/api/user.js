@@ -13,5 +13,11 @@ export default {
   },
   getUserInfoByToken () {
     return axios.get('/api/user/')
+  },
+  getUserInfoById (id) {
+    return axios.get('/api/userinfo/?id=' + id)
+  },
+  getManagerId () {
+    return axios.get('/api/userid/')
   }
 }
