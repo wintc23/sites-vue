@@ -10,7 +10,7 @@
           <div class="nav-top"></div>
           <div class="avatar">
             <avatar
-              :user_id="managerId"
+              :userId="managerId"
               :styleObject="{
                 width: '6rem',
                 height: '6rem',
@@ -32,9 +32,7 @@
           <div class="nav-bottom"></div>
         </div>
       </div>
-      <keep-alive>
-        <router-view class="router-view" transition-mode="out-in"></router-view>
-      </keep-alive>
+      <router-view class="router-view" transition-mode="out-in"></router-view>
     </div>
   </div>
 </template>

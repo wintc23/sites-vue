@@ -8,7 +8,7 @@ export default {
   },
   actions: {
     getInfo (context, data) {
-      if (context.state[data.id]) {
+      if (context.state.info[data.id]) {
         data.callback && data.callback()
         return 
       }

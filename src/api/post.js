@@ -10,6 +10,9 @@ export default {
   getPostType () {
     return axios.get('/api/post-types/')
   },
+  savePost (params) {
+    return axios.post('/api/save-post/', params)
+  },
   updateType (params) {
     return axios.post('/api/type-manage/', params)
   },

@@ -1,16 +1,16 @@
 <template>
   <div class="editor-page" v-show="show">
     <div class="post-title">
-      <Input placeholder="输入文章标题" />
+      <Input placeholder="输入文章标题" v-model="postInfo.title" />
     </div>
     <div class="post-content">
-      <mavon-editor class="editor" v-model="postInfo.content"/>
+      <mavon-editor class="editor" v-model="postInfo.body"/>
     </div>
     <div class="post-info">
     </div>
     <div class="post-menu">
       <Button type="primary" class="button" @click="showSetting=true">文章设置</Button>
-      <Button type="primary" class="button">保存</Button>
+      <Button type="primary" class="button" @click="save">保存</Button>
     </div>
     <Modal v-model="showSetting" title="文章设置">
       <div class="post-setting">
@@ -39,16 +39,17 @@
 </template>
 
 <script>
+import postApi from '@/api/post'
 
 export default {
   data () {
     return {
       loaded: false,
-      showSetting: true,
+      showSetting: false,
       postInfo: {
         title: '',
-        content: '',
-        type: '',
+        body: '',
+        type: 0,
         tags: []
       }
     }
@@ -68,6 +69,45 @@ export default {
     types () {
       return this.$store.state.post.typeList
     }
+  },
+  mounted () {
+    this.getPostInfo()
+  },
+  methods: {
+    save () {
+      postApi.savePost(this.postInfo).then(res => {
+        if (res.status == 200) {
+          this.$Message.success('保存成功')
+          this.$router.push({
+            name: 'PostEdit',
+            query: {
+              id: this.$route.query.id
+            }
+          })
+          this.$router.push({
+            name: 'Post',
+            query: {
+              id: res.data.id
+            }
+          })
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    getPostInfo () {
+      let postId = this.$route.query.id
+      if (!postId) return
+      postApi.getPost(postId).then(res => {
+        if (res.status === 200) {
+          this.postInfo = res.data
+          this.loaded = true
+        } 
+      }).catch (error => {
+        console.log(error)
+        this.$Message.error('获取文章失败')
+      })
+    },
   }
 }
 </script>

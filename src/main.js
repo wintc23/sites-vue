@@ -9,12 +9,14 @@ import { IsPC } from '@/libs/tool.js'
 import '@/directives/index'
 import store from './store'
 import Avatar from '@/components/Avatar'
+import showdown from 'showdown'
 
 Vue.use(iView)
 Vue.use(mavonEditor)
 Vue.config.productionTip = false
 Vue.prototype.$bus = new Vue()
 Vue.prototype.$isPC = IsPC()
+Vue.prototype.$converter = new showdown.Converter()
 Vue.component('avatar', Avatar)
 
 new Vue({

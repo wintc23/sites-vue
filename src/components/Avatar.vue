@@ -1,5 +1,5 @@
 <template>
-  <div class="avatar">
+  <div class="avatar" :class="horizontal ? 'horizontal' : 'vertical'">
     <template v-if="loaded">
       <div class="avatar-img">
         <img :src="userinfo.avatar" alt="" :style="styleObject">
@@ -15,9 +15,13 @@
 import { mapActions } from 'vuex';
 export default {
   props: {
-    user_id: {
+    userId: {
       type: Number,
       required: true
+    },
+    horizontal: {
+      type: Boolean,
+      default: false
     },
     styleObject: {
       type: Object,
@@ -32,28 +36,47 @@ export default {
   computed: {
     userinfo () {
       if (!this.loaded) return null
-      return this.$store.state.user.info[this.user_id]
+      return this.$store.state.user.info[this.userId]
     }
   },
   methods: {
     ...mapActions({
       getInfo: 'user/getInfo'
-    })
-  },
-  created () {
-  },
-  watch: {
-    user_id () {
-      if (this.user_id) {
+    }),
+    refreshInfo () {
+      if (this.userId) {
         this.getInfo({
-          id: this.user_id,
+          id: this.userId,
           callback: () => {
             this.loaded = true
           }
         })
       }
-    } 
+    }
+  },
+  created () {
+    this.refreshInfo()
+  },
+  watch: {
+    userId () {
+      this.refreshInfo()
+    }
   }
 }
 </script>
 
+<style lang="stylus" scoped>
+.avatar
+  user-select none
+  &.horizontal
+    display flex
+    align-items center
+    .avatar-img
+      display flex
+      align-items center
+    .avatar-username
+      color blue
+      cursor pointer
+      &:hover
+        text-decoration underline
+</style>
