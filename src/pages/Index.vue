@@ -3,9 +3,10 @@
     <div class="post-page main-content">
       <div v-for="(post, idx) of postList" :key="idx" class="post">
         <div class="post-title" @click.stop="readPost(post.id)">{{post.title}}</div>
-        <div class="post-tags">
-          <div class="tag">Javascript</div>
-          <div class="tag">Vue.js</div>
+        <div class="post-tags" v-if="tagList.length">
+          <div class="post-tag" v-for="(tag, idx) in post.tags" :key="idx">
+            {{tagList[tag].name}}
+          </div>
         </div>
         <div class="post-abstract">{{post.abstract}}</div>
         <div class="post-read-link" @click.stop="readPost(post.id)">阅读全文</div>
@@ -44,15 +45,36 @@ export default {
     return {
       content: '',
       postList: [],
-      currentPage: 1,
+      currentPage: 1
+    }
+  },
+  watch: {
+    '$route.query.type': function () {
+      this.getPostList()
     }
   },
   mounted () {
     this.getPostList()
   },
+  computed: {
+    typeList () {
+      let data = {}
+      this.$store.state.post.typeList.forEach(item => {
+        data[item.id] = item
+      })
+      return data
+    },
+    tagList () {
+      let data = {}
+      this.$store.state.post.tagList.forEach(item => {
+        data[item.id] = item
+      })
+      return data
+    }
+  },
   methods: {
     getPostList () {
-      postApi.getPosts(this.currentPage).then(res => {
+      postApi.getPosts({ page: this.currentPage, type: this.$route.query.type }).then(res => {
         if (res.status === 200) {
           this.postList = res.data.list
         }
@@ -61,7 +83,7 @@ export default {
       })
     },
     readPost (id) {
-      this.$router.push({ name: 'Post', query: { id } })
+      this.$router.push({ name: 'Post', query: { id, type: this.$route.query.type } })
     }
   }
 }
@@ -107,7 +129,7 @@ export default {
       display flex
       padding .5rem
       user-select none
-      .tag
+      .post-tag
         background #ECF2FC
         color #0593d3
         margin-right .5rem

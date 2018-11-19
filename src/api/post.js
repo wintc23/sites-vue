@@ -1,11 +1,11 @@
 import axios from '@/libs/request'
 
 export default {
-  getPosts (page) {
-    return axios.get('/api/posts/?page=' + page)
+  getPosts (params) {
+    return axios.post('/api/posts/', params)
   },
-  getPost (id) {
-    return axios.get('/api/post/?id=' + id)
+  getPost (params) {
+    return axios.post('/api/post/', params)
   },
   getPostType () {
     return axios.get('/api/post-types/')
@@ -27,5 +27,11 @@ export default {
   },
   addTag (params) {
     return axios.post('/api/tag-add/', params)
+  },
+  addComment (params) {
+    return axios.post('/api/add-comment/', params)
+  },
+  getComments (postId) {
+    return axios.get('/api/get-comments/?postId=' + postId)
   }
 }

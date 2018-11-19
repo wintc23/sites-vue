@@ -4,7 +4,12 @@
       <Input placeholder="输入文章标题" v-model="postInfo.title" />
     </div>
     <div class="post-content">
-      <mavon-editor class="editor" v-model="postInfo.body"/>
+      <mavon-editor
+        class="editor"
+        ref="md"
+        @imgAdd="imgAdd"
+        @imgDel="imgDel"
+        v-model="postInfo.body"/>
     </div>
     <div class="post-info">
     </div>
@@ -40,6 +45,8 @@
 
 <script>
 import postApi from '@/api/post'
+import axios from '@/libs/request'
+import { BASE_URL } from '@/libs/config'
 
 export default {
   data () {
@@ -71,6 +78,7 @@ export default {
     }
   },
   mounted () {
+    console.log(axios, axios.config)
     this.getPostInfo()
   },
   methods: {
@@ -108,6 +116,24 @@ export default {
         this.$Message.error('获取文章失败')
       })
     },
+    imgAdd (pos, file) {
+      let formdata = new FormData()
+      formdata.append('image', file)
+      axios({
+        url: '/api/save-image/',
+        method: 'put',
+        data: formdata,
+        headers: { 'content-Type': 'multipart/form-data' }
+      }).then(res => {
+        if (res.status === 200) {
+          let url = BASE_URL + '/api/get-file/?filename=' + res.data.filename
+          this.$refs.md.$img2Url(pos, url)
+        }
+      })
+    },
+    imgDel () {
+      // 
+    }
   }
 }
 </script>

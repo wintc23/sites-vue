@@ -1,12 +1,7 @@
 <template>
-  <div class="avatar" :class="horizontal ? 'horizontal' : 'vertical'">
+  <div>
     <template v-if="loaded">
-      <div class="avatar-img">
-        <img :src="userinfo.avatar" alt="" :style="styleObject">
-      </div>
-      <div class="avatar-username">
-        {{userinfo.username}}
-      </div>
+      <slot :userinfo="userinfo"></slot>
     </template>
   </div>
 </template>
@@ -18,14 +13,6 @@ export default {
     userId: {
       type: Number,
       required: true
-    },
-    horizontal: {
-      type: Boolean,
-      default: false
-    },
-    styleObject: {
-      type: Object,
-      default: () => {}
     }
   },
   data () {
@@ -64,19 +51,3 @@ export default {
   }
 }
 </script>
-
-<style lang="stylus" scoped>
-.avatar
-  user-select none
-  &.horizontal
-    display flex
-    align-items center
-    .avatar-img
-      display flex
-      align-items center
-    .avatar-username
-      color blue
-      cursor pointer
-      &:hover
-        text-decoration underline
-</style>

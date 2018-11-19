@@ -23,6 +23,21 @@ export default new Router({
           component: () => import('@/pages/Index')
         },
         {
+          path: 'open-source',
+          name: 'OpenSource',
+          component: () => import('@/pages/GitHub')
+        },
+        {
+          path: 'about-me',
+          name: 'AboutMe',
+          component: () => import('@/pages/AbouteMe')
+        },
+        {
+          path: 'about-me',
+          name: 'Life',
+          component: () => import('@/pages/Index')
+        },
+        {
           path: 'post',
           name: 'Post',
           component: () => import('@/pages/ShowPost')

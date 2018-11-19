@@ -10,6 +10,8 @@ import '@/directives/index'
 import store from './store'
 import Avatar from '@/components/Avatar'
 import showdown from 'showdown'
+import 'simple-vue-tree'
+import 'simple-vue-tree/dist/lib/simple-tree.css'
 
 Vue.use(iView)
 Vue.use(mavonEditor)

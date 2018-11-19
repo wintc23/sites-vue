@@ -1,22 +1,21 @@
 <template>
   <div class="home-page">
     <div class="header">
-      <Header @show-nav="switchShowNav"></Header>
+      <Header @show-nav="switchShowNav" @back-home="selectMenu(0)"></Header>
     </div>
     <div class="content" ref="content">
       <div class="navigation">
         <!-- <div class="nav-placeholder"></div> -->
         <div class="nav-content">
-          <div class="nav-top"></div>
-          <div class="avatar">
-            <avatar
-              :userId="managerId"
-              :styleObject="{
-                width: '6rem',
-                height: '6rem',
-                borderRadius: '3rem'
-              }">
-            </avatar>
+          <div class="nav-header">
+            <div class="avatar">
+              <avatar :userId="managerId">
+                <div slot-scope="{ userinfo }" class="avatar-slot">
+                  <img :src="userinfo.avatar" class="avatar-img" alt="">
+                  <div class="avatar-username">{{ userinfo.username }}</div>
+                </div>
+              </avatar>
+            </div>
           </div>
           <div class="nav-items">
             <div
@@ -29,7 +28,6 @@
               <div class="title">{{menu.title}}</div>
             </div>
           </div>
-          <div class="nav-bottom"></div>
         </div>
       </div>
       <router-view class="router-view" transition-mode="out-in"></router-view>
@@ -58,12 +56,14 @@ export default {
         {
           type: 'blog',
           title: '博客',
-          icon: 'ios-bookmarks'
+          icon: 'ios-bookmarks',
+          name: 'Index'
         },
         {
           icon: 'logo-tux',
           type: 'openSource',
-          title: '开源项目'
+          title: '开源项目',
+          name: 'OpenSource'
         },
         // {
         //   type: 'works',
@@ -72,17 +72,20 @@ export default {
         {
           type: 'book',
           title: '读书笔记',
-          icon: 'ios-book'
+          icon: 'ios-book',
+          name: 'Index'
         },
         {
           type: 'life',
           title: '生活',
-          icon: 'ios-images'
+          icon: 'ios-images',
+          name: 'Life'
         },
         {
           type: 'personal',
           title: '关于我',
-          icon: 'md-contact'
+          icon: 'md-contact',
+          name: 'AboutMe'
         }
       ],
       contentScroll: _.debounce(() => {
@@ -91,13 +94,8 @@ export default {
     }
   },
   mounted () {
-    if (!this.canvasNest && this.$isPC) {
-      this.canvasNest = new CanvasNest(this.$refs.content, {
-        color: '72,120,246',
-        count: 88,
-        opacity: 1,
-        zIndex: 0
-      })
+    if (!this.$route.query.type) {
+      this.selectMenu(0)
     }
     this.$nextTick(() => {
       this.$refs.content.addEventListener('scroll', this.contentScroll)
@@ -109,6 +107,14 @@ export default {
     }).catch(error => {
       console.log(error)
     })
+    if (!this.canvasNest && this.$isPC) {
+      this.canvasNest = new CanvasNest(this.$refs.content, {
+        color: '72,120,246',
+        count: 88,
+        opacity: 1,
+        zIndex: 0
+      })
+    }
   },
   beforeDestroy() {
     if (this.canvasNest) {
@@ -123,6 +129,10 @@ export default {
     },
     selectMenu (idx) {
       this.menuIndex = idx
+      this.$router.push({
+        name: this.menuList[idx].name,
+        query: { type: this.menuList[idx].type }
+      })
     }
   }
 }
@@ -139,32 +149,44 @@ export default {
     background #ECF5FD
     display flex
     height 100%
+    position relative
+    transition left .1s ease-in
+    left calc(100vw - 100%)
     .router-view
       flex auto
-      overflow auto
+      overflow-x auto
+      overflow-y scroll
     .navigation
       flex auto
       flex-shrink 1
-      display flex
-      justify-content flex-end
+      // text-align right
       .nav-content
+        float right
+        height 100%
         border-radius 2px
-        position relative
         z-index 1
         width 15rem
-        flex-shrink 0
-        box-shadow 0 0 7px 0 white
-        background linear-gradient(to bottom, rgba(101, 146, 249, 0.2), rgba(101, 146, 249, 1), rgba(255, 255, 255, 1)),
-        no-repeat center/cover url(/static/img/blue_sky.jpg)
-        display flex
-        flex-direction column
-        color white
-        .nav-top
-          flex-grow 1
-        .nav-bottom
-          flex-grow 2
-        .avatar
-          margin-bottom .5rem
+        background rgba(101, 146, 249, .8)
+        border-radius 2px
+        position relative
+        .nav-header
+          color white
+          height 10rem
+          background rgba(51, 97, 216, .8)
+          display flex
+          align-items center
+          justify-content center
+          border-radius 2px
+          margin-bottom 1rem
+          box-shadow 0 1px 3px 1px #A1BFFC
+          .avatar
+            margin-bottom .5rem
+            .avatar-slot
+              user-select none
+              .avatar-img
+                width 6rem
+                height 6rem
+                border-radius 3rem
         .nav-items
           font-size 20px
           // align-self center
@@ -180,7 +202,7 @@ export default {
             .icon
               margin-right .5rem
             .title
-              text-shadow 5px 5px 10px black
+              // text-shadow 5px 5px 10px black
             &:hover .title
               // color #4878F6
               text-shadow none
@@ -190,8 +212,8 @@ export default {
               left 1px
             &.current-menu
               // border-radius 4px
-              background linear-gradient(to right, rgba(51, 97, 216, 1), rgba(51, 97, 216, .2), rgba(51, 97, 216, 1))
-              box-shadow 0 0 2px 0 white
+              background linear-gradient(to right, rgba(51, 97, 216, .2), rgba(51, 97, 216, 1), rgba(51, 97, 216, .2))
+              // box-shadow 0 0 2px 0 white
               color #FFC82C
               &:hover .title
                 color #FFC82C

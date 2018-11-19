@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { getToken, clearToken } from '@/libs/tool'
 import iView from 'iview'
+import { BASE_URL } from '@/libs/config'
 
 const beforeRequest = (config) => {
   let token = getToken()
@@ -31,7 +32,7 @@ function responseError (error) {
 }
 
 const instance = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: BASE_URL,
   timeout: 15 * 1000,
 })
 

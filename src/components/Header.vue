@@ -92,7 +92,7 @@ export default {
       getUserInfo: 'userInfo/getUserInfo'
     }),
     backHome () {
-      this.$router.push({ name: 'Index' })
+      this.$emit('back-home')
     },
     showNavigation () {
       this.$emit('show-nav')
