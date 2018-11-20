@@ -28,7 +28,7 @@
         <div class="info-time">
           <span class="title">发布于</span>
           <Icon type="ios-time-outline" class="icon" title="发布时间"/>
-          <span class="format">{{postInfo.timestamp}}</span>
+          <span class="format">{{$formatTime(postInfo.timestamp)}}</span>
         </div>
         <div class="info-read">
           <Icon type="md-eye" class="icon" title="阅读次数"/>
@@ -66,12 +66,12 @@
               <avatar :userId="data.author_id" class="comment-avatar">
                 <div slot-scope="{ userinfo }" class="avatar-slot">
                   <img :src="userinfo.avatar" class="avatar-img"/>
-                  <span class="avatar-username">{{ userinfo.username }}</span>
-                  {{data.timestamp}} {{typeof data.timestamp}}
+                  <span class="avatar-username" v-if="data.timestamp">{{ userinfo.username }}</span>
+                  {{$formatTime(data.timestamp)}}
                   <span class="reply-comment reply" v-if="data.response_id">
                     回复
                     <avatar
-                      :userId="commentInfo[data.response_id.author_id]"
+                      :userId="commentInfo[data.response_id].author_id"
                       class="reply-avatar">
                       <div class="avatar-slot" slot-scope="{ userinfo }">
                         <img :src="userinfo.avatar" />
@@ -79,7 +79,7 @@
                       </div>
                     </avatar>
                   </span>
-                  <span class="reply-post reply">评论：</span>
+                  <span class="reply-post reply" v-else>评论：</span>
                 </div>
               </avatar>
               <div class="comment-body">
@@ -96,7 +96,8 @@
               </div>
               <div class="reply-edit" v-if="data.commentEdit">
                 <Input class="reply-input" type="textarea" :rows="2" :autosize="true" v-model="data.comment" />
-                <Button type="success" @click.stop="addComment(data.comment, data.id)">提交评论</Button>
+                <Button class="save" type="success" @click.stop="addComment(data.comment, data.id)">提交评论</Button>
+                <Button class="cancel" @click.stop="setComment(data)">取消</Button>
               </div>
             </div>
           </simple-tree>
@@ -361,6 +362,17 @@ export default {
             border-radius 1rem
           .avatar-username
             margin 0 .5rem
+          .reply-comment
+            display flex
+            align-items center
+            padding-left 4px
+            .reply-avatar
+              display inline-block
+              .avatar-slot
+                img
+                  width 2rem
+                  height 2rem
+                  border-radius 1rem
       .comment-body, .reply-edit, .comment-menu
         margin-left 2.5rem
       .comment-menu
@@ -387,6 +399,10 @@ export default {
           .like-times
             // font-size 1rem
       .reply-edit
+        text-alin right
         .reply-input
           margin .5rem 0
+        .cancel, .save
+          float right
+          margin-left .5rem
 </style>
