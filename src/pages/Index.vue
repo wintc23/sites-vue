@@ -29,7 +29,7 @@
           <div class="info-time">
             <Icon type="ios-time-outline" class="icon" title="发布时间"/>
             <span class="title">发布于</span>
-            <span class="format">{{post.timestamp}}</span>
+            <span class="format">{{$formatTime(post.timestamp)}}</span>
           </div>
         </div>
       </div>

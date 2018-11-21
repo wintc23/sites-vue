@@ -57,29 +57,39 @@
           <Input  v-model="comment" type="textarea" />
           <Button type="primary" class="submit" @click.stop="addComment(comment)">提交</Button>
         </div>
-        <div class="post-comment-tree">
+        <div class="post-comment">
           <simple-tree
-            class="tree"
+            class="post-comment-tree"
             :expand="false"
+            :nodeClass="'tree-node-container'"
             :treeData="commentTree">
-            <div slot-scope="{ parentData, data }">
+            <div
+              slot-scope="{ parentData, data }"
+              :class="parentData.isRoot ? 'root-comment' : ''"
+              class="comment-tree-node">
               <avatar :userId="data.author_id" class="comment-avatar">
                 <div slot-scope="{ userinfo }" class="avatar-slot">
                   <img :src="userinfo.avatar" class="avatar-img"/>
                   <span class="avatar-username" v-if="data.timestamp">{{ userinfo.username }}</span>
-                  {{$formatTime(data.timestamp)}}
+                  <span class="reply-time">
+                    {{$formatTime(data.timestamp)}}
+                  </span>
                   <span class="reply-comment reply" v-if="data.response_id">
-                    回复
+                    <span class="reply-action">
+                      回复
+                    </span>
                     <avatar
                       :userId="commentInfo[data.response_id].author_id"
                       class="reply-avatar">
-                      <div class="avatar-slot" slot-scope="{ userinfo }">
+                      <div class="reply-avatar-slot" slot-scope="{ userinfo }">
                         <img :src="userinfo.avatar" />
                         <span>{{userinfo.username}}</span>
                       </div>
                     </avatar>
                   </span>
-                  <span class="reply-post reply" v-else>评论：</span>
+                  <span class="reply-post reply" v-else>
+                    <span class="reply-action">评论：</span>
+                  </span>
                 </div>
               </avatar>
               <div class="comment-body">
@@ -96,8 +106,8 @@
               </div>
               <div class="reply-edit" v-if="data.commentEdit">
                 <Input class="reply-input" type="textarea" :rows="2" :autosize="true" v-model="data.comment" />
-                <Button class="save" type="success" @click.stop="addComment(data.comment, data.id)">提交评论</Button>
                 <Button class="cancel" @click.stop="setComment(data)">取消</Button>
+                <Button class="save" type="success" @click.stop="addComment(data.comment, data.id)">提交评论</Button>
               </div>
             </div>
           </simple-tree>
@@ -351,58 +361,81 @@ export default {
       border-top 1px solid #b2b2b2
       margin .5rem 0
       padding .5rem
-      .comment-avatar
-        padding 4px
-        .avatar-slot
-          display flex
-          align-items center
-          .avatar-img
-            width 2rem
-            height 2rem
-            border-radius 1rem
-          .avatar-username
-            margin 0 .5rem
-          .reply-comment
+      .comment-tree-node
+        .comment-avatar
+          padding 4px
+          .avatar-slot
             display flex
             align-items center
-            padding-left 4px
-            .reply-avatar
-              display inline-block
-              .avatar-slot
-                img
-                  width 2rem
-                  height 2rem
-                  border-radius 1rem
-      .comment-body, .reply-edit, .comment-menu
-        margin-left 2.5rem
-      .comment-menu
-        margin-top .5rem
-        display flex
-        align-items center
-        .comment-like .like, .reply .reply-icon
-          cursor pointer
-          font-size 16px
-          // width 1rem
-          // height 1rem
-          display inline-flex
-          justify-content center
-          color #0593d3
-          &:active
-            position relative
-            left 1px
-            top 1px
-        .reply
-          margin 0 .5rem
-        .comment-like
+            .avatar-img
+              width 2rem
+              height 2rem
+              border-radius 1rem
+            .avatar-username
+              margin-left .5rem
+              color #3361D8
+              font-weight 1000
+            .reply-time
+              margin 0 .5rem
+            .reply-comment
+              display flex
+              align-items center
+              padding-left 4px
+              .reply-avatar
+                display inline-block
+                .reply-avatar-slot
+                  display flex
+                  align-items center
+                  img
+                    width 2rem
+                    height 2rem
+                    border-radius 1rem
+                    margin 0 .5rem
+                  span
+                    color #3361D8
+                    font-weight 1000 
+            .reply
+              .reply-action
+                color #0593d3
+                font-weight 1000
+        .comment-body, .reply-edit, .comment-menu
+          margin-left 2.5rem
+        .comment-menu
+          margin-top .5rem
           display flex
           align-items center
-          .like-times
-            // font-size 1rem
+          .comment-like .like, .reply .reply-icon
+            cursor pointer
+            font-size 16px
+            // width 1rem
+            // height 1rem
+            display inline-flex
+            justify-content center
+            color #0593d3
+            &:active
+              position relative
+              left 1px
+              top 1px
+          .reply
+            margin 0 .5rem
+          .comment-like
+            display flex
+            align-items center
+            .like-times
+              // font-size 1rem
       .reply-edit
-        text-alin right
+        text-align right
         .reply-input
           margin .5rem 0
         .cancel, .save
-          float right
           margin-left .5rem
+</style>
+
+<style lang="stylus">
+.post-comment-tree
+  > .tree-node-container
+    margin .5rem 0
+    border-radius 2px
+    box-shadow 0 0 5px 0 #DFDFDF
+    padding .5rem
 </style>
