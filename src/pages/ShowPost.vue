@@ -11,7 +11,7 @@
         <div class="placeholder"></div>
         <div class="author" v-if="postInfo.author_id">
           <avatar :userId="postInfo.author_id" class="avatar">
-            <div slot-scope="{ userinfo }" class="avatar-slot">
+            <div slot-scope="{ userinfo }" class="avatar-slot" v-if="userinfo">
               <img
                 :src="userinfo.avatar"
                 alt=""
@@ -62,13 +62,14 @@
             class="post-comment-tree"
             :expand="false"
             :nodeClass="'tree-node-container'"
+            maxIndent="36"
             :treeData="commentTree">
             <div
               slot-scope="{ parentData, data }"
               :class="parentData.isRoot ? 'root-comment' : ''"
               class="comment-tree-node">
               <avatar :userId="data.author_id" class="comment-avatar">
-                <div slot-scope="{ userinfo }" class="avatar-slot">
+                <div slot-scope="{ userinfo }" v-if="userinfo" class="avatar-slot">
                   <img :src="userinfo.avatar" class="avatar-img"/>
                   <span class="avatar-username" v-if="data.timestamp">{{ userinfo.username }}</span>
                   <span class="reply-time">
@@ -81,7 +82,7 @@
                     <avatar
                       :userId="commentInfo[data.response_id].author_id"
                       class="reply-avatar">
-                      <div class="reply-avatar-slot" slot-scope="{ userinfo }">
+                      <div class="reply-avatar-slot" slot-scope="{ userinfo }" v-if="userinfo">
                         <img :src="userinfo.avatar" />
                         <span>{{userinfo.username}}</span>
                       </div>
