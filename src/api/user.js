@@ -19,5 +19,8 @@ export default {
   },
   getManagerId () {
     return axios.get('/api/userid/')
+  },
+  confirmAccount (params) {
+    return axios.post('/api/confirm/', params)
   }
 }

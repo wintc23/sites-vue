@@ -41,6 +41,11 @@ export default new Router({
           path: 'post',
           name: 'Post',
           component: () => import('@/pages/ShowPost')
+        },
+        {
+          path: '/confirm',
+          name: 'Confirm',
+          component: () => import ('@/pages/Confirm')
         }
       ]
     },

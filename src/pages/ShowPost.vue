@@ -58,60 +58,62 @@
           <Button type="primary" class="submit" @click.stop="addComment(comment)">提交</Button>
         </div>
         <div class="post-comment">
-          <simple-tree
-            class="post-comment-tree"
-            :expand="false"
-            :nodeClass="'tree-node-container'"
-            maxIndent="36"
-            :treeData="commentTree">
-            <div
-              slot-scope="{ parentData, data }"
-              :class="parentData.isRoot ? 'root-comment' : ''"
-              class="comment-tree-node">
-              <avatar :userId="data.author_id" class="comment-avatar">
-                <div slot-scope="{ userinfo }" v-if="userinfo" class="avatar-slot">
-                  <img :src="userinfo.avatar" class="avatar-img"/>
-                  <span class="avatar-username" v-if="data.timestamp">{{ userinfo.username }}</span>
-                  <span class="reply-time">
-                    {{$formatTime(data.timestamp)}}
-                  </span>
-                  <span class="reply-comment reply" v-if="data.response_id">
-                    <span class="reply-action">
-                      回复
+          <transition>
+            <simple-tree
+              class="post-comment-tree"
+              :expand="false"
+              :nodeClass="'tree-node-container'"
+              :maxIndent="36"
+              :treeData="commentTree">
+              <div
+                slot-scope="{ parentData, data }"
+                :class="parentData.isRoot ? 'root-comment' : ''"
+                class="comment-tree-node">
+                <avatar :userId="data.author_id" class="comment-avatar">
+                  <div slot-scope="{ userinfo }" v-if="userinfo" class="avatar-slot">
+                    <img :src="userinfo.avatar" class="avatar-img"/>
+                    <span class="avatar-username" v-if="data.timestamp">{{ userinfo.username }}</span>
+                    <span class="reply-time">
+                      {{$formatTime(data.timestamp)}}
                     </span>
-                    <avatar
-                      :userId="commentInfo[data.response_id].author_id"
-                      class="reply-avatar">
-                      <div class="reply-avatar-slot" slot-scope="{ userinfo }" v-if="userinfo">
-                        <img :src="userinfo.avatar" />
-                        <span>{{userinfo.username}}</span>
-                      </div>
-                    </avatar>
-                  </span>
-                  <span class="reply-post reply" v-else>
-                    <span class="reply-action">评论：</span>
-                  </span>
+                    <span class="reply-comment reply" v-if="data.response_id">
+                      <span class="reply-action">
+                        回复
+                      </span>
+                      <avatar
+                        :userId="commentInfo[data.response_id].author_id"
+                        class="reply-avatar">
+                        <div class="reply-avatar-slot" slot-scope="{ userinfo }" v-if="userinfo">
+                          <img :src="userinfo.avatar" />
+                          <span>{{userinfo.username}}</span>
+                        </div>
+                      </avatar>
+                    </span>
+                    <span class="reply-post reply" v-else>
+                      <span class="reply-action">评论：</span>
+                    </span>
+                  </div>
+                </avatar>
+                <div class="comment-body">
+                  {{ data.body }}
                 </div>
-              </avatar>
-              <div class="comment-body">
-                {{ data.body }}
-              </div>
-              <div class="comment-menu">
-                <div class="comment-like">
-                  <Icon class="like" type="md-thumbs-up" />
-                  <span class="like-times">23 </span>
+                <div class="comment-menu">
+                  <div class="comment-like">
+                    <Icon class="like" type="md-thumbs-up" />
+                    <span class="like-times">23 </span>
+                  </div>
+                  <div class="reply">
+                    <Icon @click.stop="setComment(data)" class="reply-icon" type="ios-undo" />
+                  </div>
                 </div>
-                <div class="reply">
-                  <Icon @click.stop="setComment(data)" class="reply-icon" type="ios-undo" />
+                <div class="reply-edit" v-if="data.commentEdit">
+                  <Input class="reply-input" type="textarea" :rows="2" :autosize="true" v-model="data.comment" />
+                  <Button class="cancel" @click.stop="setComment(data)">取消</Button>
+                  <Button class="save" type="success" @click.stop="addComment(data.comment, data.id)">提交评论</Button>
                 </div>
               </div>
-              <div class="reply-edit" v-if="data.commentEdit">
-                <Input class="reply-input" type="textarea" :rows="2" :autosize="true" v-model="data.comment" />
-                <Button class="cancel" @click.stop="setComment(data)">取消</Button>
-                <Button class="save" type="success" @click.stop="addComment(data.comment, data.id)">提交评论</Button>
-              </div>
-            </div>
-          </simple-tree>
+            </simple-tree>
+          </transition>
         </div>
       </div>
     </div>
@@ -157,6 +159,9 @@ export default {
     },
     userInfo () {
       return this.$store.state.userInfo
+    },
+    readList () {
+      return this.$store.state.postRead.readList
     }
   },
   watch: {
@@ -174,11 +179,14 @@ export default {
     },
     getPostInfo () {
       let postId = this.$route.query.id
-      let postType = this.$route.query.type
       if (!postId) return
+      let postType = this.$route.query.type
+      let addRead = !this.readList[postId]
+      addRead && this.$store.commit('postRead/addReadTime', { id: postId })
       postApi.getPost({
         postId,
-        postType
+        postType,
+        addRead
       }).then(res => {
         if (res.status === 200) {
           this.postInfo = res.data

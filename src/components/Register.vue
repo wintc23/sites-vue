@@ -53,19 +53,20 @@ export default {
     }
     const validateUsername = (rue, value, callback) => {
       if (value.length < 2) {
-        callback(new Error('用户名太短，请选择2～7个字符长度的用户名'))
-      } else if (value.length > 7) {
-        callback(new Error('用户名太长，请选择2～7个字符长度的用户名'))
+        callback(new Error('用户名太短，请选择2～15个字符长度的用户名'))
+      } else if (value.length > 15) {
+        callback(new Error('用户名太长，请选择2～15个字符长度的用户名'))
       } else {
         callback()
       }
     }
     return {
       registerInfo: {
-        email: '1@qq.com',
-        password: '123',
-        password2: '',
-        username: ''
+        email: '1401618872@qq.com',
+        password: '123456',
+        password2: '123456',
+        username: '123456',
+        url: 'http://' + window.location.host + '/#/confirm'
       },
       ruleValidate: {
         email: [
@@ -83,20 +84,22 @@ export default {
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { validator: validateUsername, trigger: 'blur' }
         ]
-      }
+      },
+      registerSuccess: false
     }
   },
   methods: {
     register (name) {
       this.$refs[name].validate(valid => {
         if (valid) {
+          console.table(this.registerInfo)
           userApi.register(this.registerInfo).then(res => {
             if (res.status === 200 && res.data.success) {
               this.$Message.success('注册成功！')
               this.$emit('success')
             }
           }).catch(error => {
-            this.$Message.error(error.response.data.message || '注册失败')
+            // this.$Message.error(error.response.data.message || '注册失败')
           })
         } else {
           this.$Message.error('请检查账号密码输入')

@@ -106,7 +106,9 @@ export default {
     getPostInfo () {
       let postId = this.$route.query.id
       if (!postId) return
-      postApi.getPost(postId).then(res => {
+      postApi.getPost({
+        postId
+      }).then(res => {
         if (res.status === 200) {
           this.postInfo = res.data
           this.loaded = true
