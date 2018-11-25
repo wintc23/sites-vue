@@ -92,9 +92,7 @@ export default {
     }
   },
   mounted () {
-    if (!this.$route.query.type) {
-      this.selectMenu(0)
-    }
+    this.selectMenu(0)
     userApi.getManagerId().then(res => {
       if (res.status === 200) {
         this.managerId = res.data.id
@@ -127,8 +125,7 @@ export default {
     selectMenu (idx) {
       this.menuIndex = idx
       this.$router.push({
-        name: this.menuList[idx].name,
-        query: { type: this.menuList[idx].type }
+        name: this.menuList[idx].name
       })
     }
   }

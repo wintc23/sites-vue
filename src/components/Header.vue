@@ -26,7 +26,10 @@
           <div class="write-post menu-item" v-if="userInfo.manager" @click.stop="manage">
             后台管理
           </div>
-          <div class="log-out menu-item" @click.stop=" ">
+          <div class="profile-setting menu-item" @click.stop="setting">
+            设置
+          </div>
+          <div class="log-out menu-item" @click.stop="logout">
             退出
           </div>
         </div>
@@ -47,7 +50,7 @@
           <div class="fill"></div>
           <div class="content">
             <Login v-if="rightDrawer===1" @register-link="rightDrawer=2" @success="loginSuccess" ></Login>
-            <Register v-else @login-link="rightDrawer=1" @success="registerSuccess"></Register>
+            <Register v-else-if="rightDrawer===2" @login-link="rightDrawer=1" @success="registerSuccess"></Register>
           </div>
           <div class="fill"></div>
           <div class="fill"></div>
@@ -102,7 +105,7 @@ export default {
       this.rightDrawer = 0
       this.getUserInfo()
     },
-    loginOut () {
+    logout () {
       this.hideMenu()
       clearToken()
       this.$store.commit('userInfo/clearInfo')
@@ -123,6 +126,9 @@ export default {
     manage () {
       this.hideMenu()
       this.$router.push({ name: 'Manage' })
+    },
+    setting () {
+      this.hideMenu()
     }
   }
 }
