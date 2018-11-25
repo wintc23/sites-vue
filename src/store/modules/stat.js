@@ -1,11 +1,11 @@
 export default {
   namespaced: true,
   state: {
-    readList: {}
+    postRead: {}
   },
   mutations: {
     addReadTime (state, data) {
-      state.readList[data.id] = true
+      state.postRead[data.id] = true
     }
   }
 }

@@ -4,8 +4,10 @@
       <Header @show-nav="switchShowNav" @back-home="selectMenu(0)"></Header>
     </div>
     <div class="content" ref="content">
-      <div class="navigation">
-        <!-- <div class="nav-placeholder"></div> -->
+      <div
+        class="navigation"
+        :class="showNav ? 'nav-show' : 'nav-hide'"
+        v-click-outside="hideNavigation">
         <div class="nav-content">
           <div class="nav-header">
             <div class="avatar">
@@ -47,9 +49,8 @@ export default {
   },
   data () {
     return {
-      showNav: true,
+      showNav: this.$isPC,
       canvasNest: null,
-      scrollTop: 0,
       managerId: 0,
       menuIndex: 0,
       menuList: [
@@ -87,19 +88,13 @@ export default {
           icon: 'md-contact',
           name: 'AboutMe'
         }
-      ],
-      contentScroll: _.debounce(() => {
-        this.scrollTop = this.$refs.content.scrollTop
-      }, 200)
+      ]
     }
   },
   mounted () {
     if (!this.$route.query.type) {
       this.selectMenu(0)
     }
-    this.$nextTick(() => {
-      this.$refs.content.addEventListener('scroll', this.contentScroll)
-    })
     userApi.getManagerId().then(res => {
       if (res.status === 200) {
         this.managerId = res.data.id
@@ -121,11 +116,13 @@ export default {
       this.canvasNest.destroy()
       this.canvasNest = null
     }
-    this.$refs.content.removeEventListener('scroll', this.contentScroll)
   },
   methods: {
     switchShowNav () {
       this.showNav = !this.showNav
+    },
+    hideNavigation () {
+      this.showNav = false
     },
     selectMenu (idx) {
       this.menuIndex = idx
@@ -151,7 +148,6 @@ export default {
     height 100%
     position relative
     transition left .1s ease-in
-    left calc(100vw - 100%)
     .router-view
       flex auto
       overflow-x auto
@@ -217,17 +213,54 @@ export default {
               color #FFC82C
               &:hover .title
                 color #FFC82C
+@media screen and (max-width: 600px)
+  .home-page
+    .content
+      .navigation
+        position fixed
+        z-index 2
+        bottom 0
+        top 3rem
+        transition left .2s ease-in-out
+        max-width 100%
+        .nav-content
+          background rgb(101, 146, 249)
+        &.nav-show
+          left 0
+        &.nav-hide
+          left -15rem
 </style>
 
 <style lang="stylus">
 .router-view
   & > .main-content
-    max-width 55rem
+    max-width 100%
     width 55rem
     background white
     position relative
     z-index 1
     min-height 100%
     padding 1rem
+.home-page
+  .header
+    .page-header
+      .header-left
+        .collapse
+          display none
+code
+  overflow-x auto
+  max-width 100%
+pre
+  overflow auto
+@media screen and (max-width: 600px)
+  .home-page
+    .header
+      .page-header
+        .header-left
+          .collapse
+            display inline-block
+  .router-view
+    & > .main-content
+      width 100%
 </style>
 

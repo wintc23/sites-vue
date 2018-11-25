@@ -17,16 +17,16 @@
           <img :src="userInfo.avatar" class="avatar-img" alt="头像" />
         </div>
         <div class="menu" v-show="showUserMenu">
-          <div class="user-name menu-item">
+          <!-- <div class="user-name menu-item">
             {{userInfo.username}}
-          </div>
+          </div> -->
           <div class="write-post menu-item" v-if="userInfo.manager" @click.stop="editPost">
             写文章
           </div>
           <div class="write-post menu-item" v-if="userInfo.manager" @click.stop="manage">
             后台管理
           </div>
-          <div class="log-out menu-item" @click.stop="loginOut">
+          <div class="log-out menu-item" @click.stop=" ">
             退出
           </div>
         </div>
@@ -92,6 +92,7 @@ export default {
       getUserInfo: 'userInfo/getUserInfo'
     }),
     backHome () {
+      this.$router.push({ name: 'Index' })
       this.$emit('back-home')
     },
     showNavigation () {
@@ -102,6 +103,7 @@ export default {
       this.getUserInfo()
     },
     loginOut () {
+      this.hideMenu()
       clearToken()
       this.$store.commit('userInfo/clearInfo')
     },
@@ -115,9 +117,11 @@ export default {
       this.showUserMenu = false
     },
     editPost () {
+      this.hideMenu()
       this.$router.push({ name: 'PostEdit' })
     },
     manage () {
+      this.hideMenu()
       this.$router.push({ name: 'Manage' })
     }
   }

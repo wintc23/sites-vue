@@ -9,23 +9,23 @@
           </div>
         </div>
         <div class="placeholder"></div>
-        <div class="author" v-if="postInfo.author_id">
-          <avatar :userId="postInfo.author_id" class="avatar">
-            <div slot-scope="{ userinfo }" class="avatar-slot" v-if="userinfo">
-              <img
-                :src="userinfo.avatar"
-                alt=""
-                class="avatar-img"
-                :style="{
-                  width: '1rem',
-                  height: '1rem',
-                  borderRadius: '.5rem'
-                }">
-                <span class="avatar-username">{{userinfo.username}}</span>
-            </div>
-          </avatar>
-        </div>
         <div class="info-time">
+          <div class="author" v-if="postInfo.author_id">
+            <avatar :userId="postInfo.author_id" class="avatar">
+              <div slot-scope="{ userinfo }" class="avatar-slot" v-if="userinfo">
+                <img
+                  :src="userinfo.avatar"
+                  alt=""
+                  class="avatar-img"
+                  :style="{
+                    width: '1rem',
+                    height: '1rem',
+                    borderRadius: '.5rem'
+                  }">
+                  <span class="avatar-username">{{userinfo.username}}</span>
+              </div>
+            </avatar>
+          </div>
           <span class="title">发布于</span>
           <Icon type="ios-time-outline" class="icon" title="发布时间"/>
           <span class="format">{{$formatTime(postInfo.timestamp)}}</span>
@@ -161,7 +161,7 @@ export default {
       return this.$store.state.userInfo
     },
     readList () {
-      return this.$store.state.postRead.readList
+      return this.$store.state.stat.postRead
     }
   },
   watch: {
@@ -182,7 +182,7 @@ export default {
       if (!postId) return
       let postType = this.$route.query.type
       let addRead = !this.readList[postId]
-      addRead && this.$store.commit('postRead/addReadTime', { id: postId })
+      addRead && this.$store.commit('stat/addReadTime', { id: postId })
       postApi.getPost({
         postId,
         postType,
@@ -285,6 +285,7 @@ export default {
     display flex
     margin .5rem 0
     align-items center
+    flex-wrap wrap
     // justify-content center
     // font-size 1rem
     .info-time, .info-read
@@ -304,6 +305,7 @@ export default {
     .post-tags
       margin .5rem 0
       display flex
+      flex-wrap wrap
       user-select none
       .post-tag
         background #ECF2FC
