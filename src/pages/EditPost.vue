@@ -7,6 +7,7 @@
       <mavon-editor
         class="editor"
         ref="md"
+        @change="changeString"
         @imgAdd="imgAdd"
         @imgDel="imgDel"
         v-model="postInfo.body"/>
@@ -14,11 +15,19 @@
     <div class="post-info">
     </div>
     <div class="post-menu">
-      <Button type="primary" class="button" @click="showSetting=true">文章设置</Button>
+      <Button type="primary" class="button" @click="showPostSetting">文章设置</Button>
       <Button type="primary" class="button" @click="save">保存</Button>
     </div>
-    <Modal v-model="showSetting" title="文章设置">
+    <Modal v-model="showSetting" title="文章设置" width="80">
       <div class="post-setting">
+        <!-- <div class="post-image">
+          <div class="title">文章缩略图</div>
+          <div></div>
+        </div> -->
+        <div class="post-abstract">
+          <div class="title">文章摘要</div>
+          <Input type="textarea" v-model="postInfo.abstract" autosize />
+        </div>
         <div class="post-type">
           <div class="title">文章分类</div>
           <Select v-model="postInfo.type">
@@ -54,8 +63,10 @@ export default {
       loaded: false,
       showSetting: false,
       postInfo: {
+        abstract: '',
         title: '',
         body: '',
+        body_html: '',
         type: 0,
         tags: []
       }
@@ -82,6 +93,9 @@ export default {
     this.getPostInfo()
   },
   methods: {
+    changeString (value, render) {
+      this.postInfo.body_html = render
+    },
     save () {
       postApi.savePost(this.postInfo).then(res => {
         if (res.status == 200) {
@@ -135,6 +149,12 @@ export default {
     },
     imgDel () {
       // 
+    },
+    showPostSetting () {
+      this.showSetting = true
+      if (!this.postInfo.abstract) {
+        this.postInfo.abstract = this.postInfo.body.slice(0, 500)
+      } 
     }
   }
 }
@@ -165,7 +185,7 @@ export default {
       margin .5rem
 
 .post-setting
-  .post-type, .post-tags
+  .post-type, .post-tags, .post-image, .post-abstract
     margin-bottom 1rem
     .title
       margin-bottom .5rem

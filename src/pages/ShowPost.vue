@@ -35,12 +35,12 @@
           <span class="title">阅读</span>
           <span class="count">{{postInfo.read_times}}</span>
         </div>
-        <div class="menu-edit" v-if="postInfo.author_id && userinfo.id === postInfo.author_id">
+        <div class="menu-edit" v-if="postInfo.author_id && userInfo.id === postInfo.author_id">
           <Button type="primary" size='small' @click.stop="editPost">编辑</Button>
         </div>
       </div>
       <div class="post-content">
-        <div v-html="content"></div>
+        <div v-html="postInfo.body_html"></div>
       </div>
       <div class="post-link">
         <div class="last" v-if="postInfo.before" @click.stop="showPost('before')">
@@ -134,15 +134,6 @@ export default {
     }
   },
   computed: {
-    content () {
-      if (this.postInfo.body) {
-        return this.$converter.makeHtml(this.postInfo.body)
-      }
-      return ''
-    },
-    userinfo () {
-      return this.$store.state.userInfo
-    },
     typeList () {
       let data = {}
       this.$store.state.post.typeList.forEach(item => {
@@ -243,12 +234,20 @@ export default {
       this.commentTree = list
     },
     setComment (data) {
+      if (!this.userInfo.username) {
+        this.$Message.info('请先登录再进行评论')
+        return
+      }
       this.$set(data, 'commentEdit', !data.commentEdit)
       if (!data.comment) {
         this.$set(data, 'comment', '')
       }
     },
     addComment (comment, response) {
+      if (!this.userInfo.username) {
+        this.$Message.info('请先登录再进行评论')
+        return
+      }
       let params = {
         body: comment,
         postId: this.$route.query.id,
