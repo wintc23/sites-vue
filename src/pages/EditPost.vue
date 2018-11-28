@@ -100,12 +100,12 @@ export default {
       postApi.savePost(this.postInfo).then(res => {
         if (res.status == 200) {
           this.$Message.success('保存成功')
-          this.$router.push({
-            name: 'PostEdit',
-            query: {
-              id: this.$route.query.id
-            }
-          })
+          // this.$router.push({
+          //   name: 'PostEdit',
+          //   query: {
+          //     id: this.$route.query.id
+          //   }
+          // })
           this.$router.push({
             name: 'Post',
             query: {

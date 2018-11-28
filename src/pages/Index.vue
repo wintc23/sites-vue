@@ -8,7 +8,7 @@
             {{tagList[tag].name}}
           </div>
         </div>
-        <div class="post-abstract">{{post.abstract}}</div>
+        <div class="post-abstract" v-html="$converter.makeHtml(post.abstract)"></div>
         <div class="post-read-link" @click.stop="readPost(post.id)">阅读全文</div>
         <div class="post-info">
           <div class="info-read">

@@ -448,4 +448,8 @@ export default {
     border-radius 2px
     box-shadow 0 0 5px 0 #DFDFDF
     padding .5rem
+.post-content
+  img
+    max-width 100%
+    height auto
 </style>
