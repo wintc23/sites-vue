@@ -62,10 +62,10 @@ export default {
     }
     return {
       registerInfo: {
-        email: '1401618872@qq.com',
-        password: '123456',
-        password2: '123456',
-        username: '123456',
+        email: '',
+        password: '',
+        password2: '',
+        username: '',
         url: 'http://' + window.location.host + '/#/confirm'
       },
       ruleValidate: {
