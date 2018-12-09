@@ -24,6 +24,10 @@
           <div class="title">文章缩略图</div>
           <div></div>
         </div> -->
+        <div class="post-hide">
+          <Checkbox v-model="postInfo.hide">隐藏</Checkbox>
+          <Input v-if="postInfo.hide" class="secrect-code" v-model="postInfo.secretCode" placeholder="请输入密令"/>
+        </div>
         <div class="post-abstract">
           <div class="title">文章摘要</div>
           <Input type="textarea" v-model="postInfo.abstract" autosize />
@@ -68,7 +72,9 @@ export default {
         body: '',
         body_html: '',
         type: 0,
-        tags: []
+        tags: [],
+        secretCode: '',
+        hide: false
       }
     }
   },
@@ -97,6 +103,17 @@ export default {
       this.postInfo.body_html = render
     },
     save () {
+      if (!this.postInfo.type) {
+        this.$Message.warning('请设置文章类型')
+        return
+      }
+      if (this.postInfo.hide && !this.postInfo.secretCode) {
+        this.$Message.warning('隐藏文章，请设置一个密令')
+        return
+      }
+      if (!this.postInfo.hide) {
+        this.postInfo.secretCode = ''
+      }
       postApi.savePost(this.postInfo).then(res => {
         if (res.status == 200) {
           this.$Message.success('保存成功')
@@ -126,7 +143,7 @@ export default {
         if (res.status === 200) {
           this.postInfo = res.data
           this.loaded = true
-        } 
+        }
       }).catch (error => {
         console.log(error)
         this.$Message.error('获取文章失败')
@@ -185,7 +202,7 @@ export default {
       margin .5rem
 
 .post-setting
-  .post-type, .post-tags, .post-image, .post-abstract
+  .post-type, .post-tags, .post-hide, .post-abstract
     margin-bottom 1rem
     .title
       margin-bottom .5rem

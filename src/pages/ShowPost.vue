@@ -40,7 +40,8 @@
         </div>
       </div>
       <div class="post-content">
-        <div v-html="postInfo.body_html"></div>
+        <Button v-if="postInfo.hide && postInfo.error_secret" type="success" @click.stop="secretInputShow=true">输入密令查看文章内容</Button>
+        <div v-html="postInfo.body_html" v-else></div>
       </div>
       <div class="post-link">
         <div class="last" v-if="postInfo.before" @click.stop="showPost('before')">
@@ -117,6 +118,14 @@
         </div>
       </div>
     </div>
+    <Modal
+      title="本文需要提供密令才能查看，请输入"
+      v-model="this.secretInputShow">
+      <Input v-model="secretCode" placeholder="请输入本文密令"/>
+      <div slot="footer">
+        <Button @click.stop="getPostInfo()" type="primary">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -130,7 +139,9 @@ export default {
       commentTree: [],
       comment: '',
       commentNum: 0,
-      commentInfo: {}
+      commentInfo: {},
+      secretCode: '',
+      secretInputShow: false
     }
   },
   computed: {
@@ -165,6 +176,7 @@ export default {
   },
   methods: {
     refreshPage() {
+      this.secretCode = ''
       this.getPostInfo()
       this.getComments()
     },
@@ -177,10 +189,21 @@ export default {
       postApi.getPost({
         postId,
         postType,
-        addRead
+        addRead,
+        secretCode: this.secretCode
       }).then(res => {
         if (res.status === 200) {
           this.postInfo = res.data
+          if (this.postInfo.hide && this.postInfo.error_secret) {
+            this.secretInputShow = true
+            if (this.secretCode) {
+              this.$Message.warning('请输入正确的密令！')
+            } else {
+              this.$Message.warning('请输入密令查看本文！')
+            }
+          } else {
+            this.secretInputShow = false
+          }
         } 
       }).catch (error => {
         console.log(error)
