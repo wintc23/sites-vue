@@ -83,7 +83,14 @@ export default {
       })
     },
     readPost (id) {
-      this.$router.push({ name: 'Post', query: { id, type: this.$route.query.type } })
+      this.$router.push({
+        name: 'Post',
+        query: {
+          id,
+          type: this.$route.query.type,
+          homeMenu: this.$route.query.homeMenu
+        }
+      })
     }
   }
 }

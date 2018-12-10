@@ -23,7 +23,7 @@
             <div
               class="nav-item"
               v-for="(menu, idx) of menuList"
-              :class="menuIndex===idx ? 'current-menu': ''"
+              :class="$route.query.homeMenu===idx ? 'current-menu': ''"
               @click.stop="selectMenu(idx)"
               :key="idx">
               <Icon class="icon" :type="menu.icon" />
@@ -52,7 +52,6 @@ export default {
       showNav: this.$isPC,
       canvasNest: null,
       managerId: 0,
-      menuIndex: 0,
       menuList: [
         {
           type: 'blog',
@@ -92,7 +91,9 @@ export default {
     }
   },
   mounted () {
-    this.selectMenu(0)
+    if (!this.$route.query.homeMenu) {
+      this.selectMenu(0)
+    }
     userApi.getManagerId().then(res => {
       if (res.status === 200) {
         this.managerId = res.data.id
@@ -123,9 +124,11 @@ export default {
       this.showNav = false
     },
     selectMenu (idx) {
-      this.menuIndex = idx
       this.$router.push({
-        name: this.menuList[idx].name
+        name: this.menuList[idx].name,
+        query: {
+          homeMenu: idx
+        }
       })
     }
   }

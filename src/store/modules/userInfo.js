@@ -1,13 +1,15 @@
 // 当前用户信息
 import userApi from '@/api/user'
 import { getToken, clearToken } from '@/libs/tool'
+import { BASE_URL } from '@/libs/config'
 
 export default {
   namespaced: true,
   state: {
     username: '',
     avatar: '',
-    manager: false
+    manager: false,
+    id: ''
   },
   actions: {
     getUserInfo (context) {
@@ -27,11 +29,13 @@ export default {
       for (let key in data) {
         state[key] = data[key]
       }
+      state.avatar = BASE_URL + '/api/get-file/?filename=' + data.avatar
     },
     clearInfo (state) {
       state.username = ''
       state.avatar = ''
       state.manager = false
+      state.id = ''
     }
   }
 }

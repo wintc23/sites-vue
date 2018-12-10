@@ -120,7 +120,7 @@
     </div>
     <Modal
       title="本文需要提供密令才能查看，请输入"
-      v-model="this.secretInputShow">
+      v-model="secretInputShow">
       <Input v-model="secretCode" placeholder="请输入本文密令"/>
       <div slot="footer">
         <Button @click.stop="getPostInfo()" type="primary">确定</Button>

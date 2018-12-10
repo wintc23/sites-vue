@@ -33,7 +33,7 @@ export default new Router({
           component: () => import('@/pages/AbouteMe')
         },
         {
-          path: 'about-me',
+          path: 'life',
           name: 'Life',
           component: () => import('@/pages/Index')
         },

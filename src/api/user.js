@@ -22,5 +22,8 @@ export default {
   },
   confirmAccount (params) {
     return axios.post('/api/confirm/', params)
+  },
+  changePasswd (params) {
+    return axios.post('/api/change-password/', params)
   }
 }

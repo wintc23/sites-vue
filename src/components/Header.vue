@@ -56,6 +56,45 @@
           <div class="fill"></div>
         </div>
     </Drawer>
+    <Drawer
+      v-model="showSetting"
+      class-name="header-drawer-container"
+      title="设置个人资料">
+      <div class="draw-body">
+        <div class="avatar">
+          <div class="title">修改头像</div>
+          <img
+            :src="userInfo.avatar"
+            alt=""
+            :style="{
+              width: '8rem',
+              height: '8rem',
+              borderRadius: '50%'
+            }"/>
+            <div>点击图片更换头像</div>
+        </div>
+        <div class="change-passwd">
+          <div class="title">修改密码</div>
+          <Form ref="changePasswd" :model="changePasswd" :rules="ruleValidate">
+            <FormItem prop="oldPasswd">
+              <span slot="label" class="label">旧密码</span>
+              <Input type="password" v-model="changePasswd.oldPasswd" placeholder="请输入旧密码" />
+            </FormItem>
+            <FormItem prop="newPasswd">
+              <span slot="label" class="label">新密码</span>
+              <Input type="password" v-model="changePasswd.newPasswd" placeholder="请输入新密码" />
+            </FormItem>
+            <FormItem prop="newPasswd2">
+              <span slot="label" class="label">确认新密码</span>
+              <Input type="password" v-model="changePasswd.newPasswd2" placeholder="请确认新密码" />
+            </FormItem>
+            <FormItem :label-width="0">
+              <Button type="primary" @click.stop="changePassword('changePasswd')">确认修改密码</Button>
+            </FormItem>
+          </Form>
+        </div>
+      </div>
+    </Drawer>
   </div>
 </template>
 
@@ -68,9 +107,34 @@ import { mapActions } from 'vuex'
 
 export default {
   data () {
+    const validatePassCheck = (rule, value, callback) => {
+      if (value !== this.changePasswd.newPasswd) {
+        callback(new Error('两次密码输入不一致'))
+      } else {
+        callback()
+      }
+    }
     return {
       rightDrawer: 0, // 0-不显示 1-登录 2-注册
-      showUserMenu: false
+      showUserMenu: false,
+      showSetting: true,
+      changePasswd: {
+        oldPasswd: '',
+        newPasswd: '',
+        newPasswd2: ''
+      },
+      ruleValidate: {
+        oldPasswd: [
+          { required: true, message: '请输入旧密码', trigger: 'blur' }
+        ],
+        newPasswd: [
+          { required: true, message: '请输入新密码', trigger: 'blur' }
+        ],
+        newPasswd2: [
+          { required: true, message: '密码不能为空', trigger: 'blur'},
+          { validator: validatePassCheck, trigger: 'blur'}
+        ]
+      }
     }
   },
   computed: {
@@ -129,6 +193,19 @@ export default {
     },
     setting () {
       this.hideMenu()
+      this.showSetting = true
+    },
+    changePassword (name) {
+      this.$Message.success('hello' + name)
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          userApi.changePasswd(this.changePasswd).then(res => {
+            this.$Message.success('密码修改成功')
+          })
+        } else {
+          this.$Message.error('请检查表单输入！')
+        }
+      })
     }
   }
 }
@@ -216,5 +293,15 @@ export default {
     text-align center
     .fill
       flex auto
+    .avatar, .change-passwd
+      margin-top .5rem
+      .title
+        margin-bottom .5rem
+        font-size 1rem
+        text-align left
+        box-shadow 0 1px 1px -1px #3361D8
+    .avatar
+      img
+        cursor pointer
 </style>
 
