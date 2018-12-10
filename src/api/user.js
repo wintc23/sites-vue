@@ -25,5 +25,10 @@ export default {
   },
   changePasswd (params) {
     return axios.post('/api/change-password/', params)
+  },
+  changeAvatar (data) {
+    return axios.put('/api/save-user-avatar/', data, {
+      headers: { 'content-Type': 'multipart/form-data' }
+    })
   }
 }

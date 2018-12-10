@@ -9,7 +9,7 @@ export default {
   },
   actions: {
     getInfo (context, data) {
-      if (context.state.info[data.id]) {
+      if (context.state.info[data.id] && !data.force) {
         data.callback && data.callback()
         return 
       }
@@ -25,9 +25,8 @@ export default {
   },
   mutations: {
     setInfo (state, data) {
+      data.avatar = `${BASE_URL}/api/get-file/?filename=${data.avatar}&path=avatar`
       state.info[data.id] = data
-      data.avatar = BASE_URL + '/api/get-file/?filename=' + data.avatar
     }
   }
 }
-

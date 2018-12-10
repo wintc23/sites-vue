@@ -17,6 +17,9 @@ function requestError (error) {
 }
 
 function resPreHandle (response) {
+  if (response.data && response.data.notify) {
+    iView.Message.success(response.data.message)
+  }
   return response
 }
 

@@ -65,12 +65,16 @@
           <div class="title">修改头像</div>
           <img
             :src="userInfo.avatar"
-            alt=""
+            alt="用户头像"
+            @click.stop="clickAvatar"
             :style="{
               width: '8rem',
               height: '8rem',
               borderRadius: '50%'
             }"/>
+            <form>
+              <input type="file" :style="'display:none'" @change="checkAvatarUpload" accept="imag/png,image/jpeg" ref="avatarInput"/>
+            </form>
             <div>点击图片更换头像</div>
         </div>
         <div class="change-passwd">
@@ -117,7 +121,7 @@ export default {
     return {
       rightDrawer: 0, // 0-不显示 1-登录 2-注册
       showUserMenu: false,
-      showSetting: true,
+      showSetting: false,
       changePasswd: {
         oldPasswd: '',
         newPasswd: '',
@@ -196,7 +200,6 @@ export default {
       this.showSetting = true
     },
     changePassword (name) {
-      this.$Message.success('hello' + name)
       this.$refs[name].validate(valid => {
         if (valid) {
           userApi.changePasswd(this.changePasswd).then(res => {
@@ -206,6 +209,29 @@ export default {
           this.$Message.error('请检查表单输入！')
         }
       })
+    },
+    clickAvatar () {
+      this.$refs.avatarInput.click()
+    },
+    checkAvatarUpload (event) {
+      console.log('change')
+      let formData = new FormData()
+      formData.append('image', event.target.files[0])
+      userApi.changeAvatar(formData).then(res => {
+        if (res.status === 200) {
+          this.$store.dispatch('user/getInfo', {
+            id: this.userInfo.id,
+            force: true
+          })
+          this.$store.dispatch('userInfo/getUserInfo')
+        } else {
+          this.$Message.error('上传失败')
+        }
+      }).catch(error => {
+        console.log(error)
+        this.$Message.error('网络请求错误')
+      })
+      event.target.value = ''
     }
   }
 }

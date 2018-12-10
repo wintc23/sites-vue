@@ -29,7 +29,7 @@ export default {
       for (let key in data) {
         state[key] = data[key]
       }
-      state.avatar = BASE_URL + '/api/get-file/?filename=' + data.avatar
+      state.avatar = `${BASE_URL}/api/get-file/?filename=${data.avatar}&path=avatar`
     },
     clearInfo (state) {
       state.username = ''
