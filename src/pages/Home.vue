@@ -23,7 +23,7 @@
             <div
               class="nav-item"
               v-for="(menu, idx) of menuList"
-              :class="$route.query.homeMenu===idx ? 'current-menu': ''"
+              :class="$route.query.homeMenu - idx === 0 ? 'current-menu': ''"
               @click.stop="selectMenu(idx)"
               :key="idx">
               <Icon class="icon" :type="menu.icon" />
